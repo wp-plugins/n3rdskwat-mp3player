@@ -346,6 +346,20 @@ function n3s_follow_url(url, target) {
 	new_domain = (new_domain.indexOf('/') > -1)?new_domain.substr(0, new_domain.indexOf('/')):new_domain;
 	cur_domain = (cur_domain.indexOf('/') > -1)?cur_domain.substr(0, cur_domain.indexOf('/')):cur_domain;
 	
+	// load mp3 if link is an mp3 on the same domain:
+	if(url.indexOf(".mp3") > -1) {
+		if(url.substr(0, 1) == "/") {
+			n3s_load_item(url);
+			return;
+			
+		} else if(url.indexOf('http://') > -1) {
+			// dont load cross-domain
+			if(new_domain == cur_domain) {
+				n3s_load_item(url.replace('http://', '').replace(new_domain, ''));
+			}
+		}
+	}
+	
 	// if we are going to another domain: load the page
 	if(new_domain != cur_domain) {
 		// open links to their respective targets
