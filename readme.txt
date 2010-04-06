@@ -4,7 +4,7 @@ Donate link: http://www.n3rdskwat.com/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable
 Requires at least: 2.6.0
 Tested up to: 2.9.2
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog.
 
@@ -61,6 +61,11 @@ Or, if you know something about javascript, you can add the function-call to the
 
 == Changelog ==
 
+= 1.1.7 =
+* Updated the flash file to prevent loading when autoplay is disabled
+* Changed the 'Path to search for mp3s' to be a dropdown selection of all the directories available
+* When you have links on your website to mp3s in the playlist, they will be played when they are clicked
+
 = 1.1.6 =
 * Added cookies to maintain the page you are looking at even at hard reload
 
@@ -75,7 +80,11 @@ Or, if you know something about javascript, you can add the function-call to the
 
 == Upgrade Notice ==
 
+= 1.1.7 =
+This upgrade saved you a lot of bandwidth if you have autoplay off, the mp3 only gets loaded when somebody starts playing it.
+
 = 1.1.6 =
 Cookies need to be enabled to maintain the best browsing experience.
+
 = 1.1.5 =
 Playlist has been revised and updates on ID3 tag information, the current song is now highlighted in specified colors.

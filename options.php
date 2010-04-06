@@ -25,24 +25,22 @@ function validate_style($input, $default = 'solid') {
 	return $default;
 }
 
-function validate_path($input) {
+function dir_listing($dir) {
+//	$dir = $_SERVER['DOCUMENT_ROOT'];
+	global $dirlist;
 	
-	while($input != urldecode($input)) {
-		$input = urldecode($input);
+	if(!is_array($dirlist)) {
+		$dirlist = array();
 	}
 	
-	$input = trim($input);
-	if($input == "") {
-		return "/";
-	}
-	
-	$chars_allowed = preg_match('/^[a-zA-Z0-9\/%\s]*$/', $input);
-	
-	if($chars_allowed) {
-		return $input;
-	}
-	
-	return "/";
+	$handle = opendir($dir);
+	while(false !== ($file = readdir($handle))) {
+		if (filetype($dir."/".$file) === 'dir' && $file != "." && $file != ".."){ 
+			clearstatcache();
+			array_push($dirlist, str_replace($_SERVER['DOCUMENT_ROOT'], "", $dir."/".$file));
+			dir_listing($dir."/".$file);
+		}
+	}	
 }
 
 /* Check for admin Options submission and update options*/
@@ -70,7 +68,7 @@ if ('process' == $_POST['stage']) {
 	
 	update_option('n3rdskwat_background', validate_color($_POST['background'], 'white'));
 	
-	update_option('n3rdskwat_mp3path', validate_path($_POST['path']));
+	update_option('n3rdskwat_mp3path', $_POST['path']);
 	update_option('n3rdskwat_search_recusive', ($_POST['recursive'] == "1")?1:0);
 	
 	$opacity = intval($_POST['opacity']);
@@ -106,6 +104,9 @@ $recursive = get_option('n3rdskwat_search_recusive');
 
 $playlist_active_color = get_option('n3rdskwat_playlist_active_color');
 $playlist_active_background = get_option('n3rdskwat_playlist_active_background');
+
+
+dir_listing($_SERVER['DOCUMENT_ROOT']);
 
 ?>
 
@@ -147,11 +148,17 @@ $playlist_active_background = get_option('n3rdskwat_playlist_active_background')
 			<table width="100%" cellspacing="0" cellpadding="0">
 			<tr valign="baseline">
 				<td width="33%"><?php _e('Path to search for mp3\'s', 'n3rdskwat_mp3player') ?></td>
-				<td><input type="text" name="path" value="<?= $path ?>" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><small><?php _e('Leave blank to scan the entire website for mp3\'s', 'n3rdskwat_mp3player') ?></small></td>
+				<td>
+					<select name="path" style="width: 200px;">
+					<option value="/"<?= (($path == "/")?" SELECTED":"") ?>>/</option>
+<?php
+foreach($dirlist as $dirname) {
+	$selected = ($path == $dirname)?" SELECTED":"";
+	echo "<option value=\"".$dirname."\"".$selected.">".$dirname."</option>\n";
+}
+?>
+					</select>	
+				</td>
 			</tr>
 			</table>
 			
