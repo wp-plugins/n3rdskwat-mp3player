@@ -94,6 +94,9 @@ Or, if you know something about javascript, you can add the function-call to the
 
 == Upgrade Notice ==
 
+= 1.1.10 =
+Fixes in the cookies for taking you back to the currently viewing page while reloading the browser in use with inline linking of mp3s.
+
 = 1.1.7 =
 This upgrade saved you a lot of bandwidth if you have autoplay off, the mp3 only gets loaded when somebody starts playing it.
 
