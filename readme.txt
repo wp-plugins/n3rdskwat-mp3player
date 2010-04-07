@@ -98,6 +98,9 @@ Or, if you know something about javascript, you can add the function-call to the
 
 == Upgrade Notice ==
 
+= 1.1.11 =
+Added Nextgen-Gallery to the supported plugins list
+
 = 1.1.10 =
 Fixes in the cookies for taking you back to the currently viewing page while reloading the browser in use with inline linking of mp3s.
 
