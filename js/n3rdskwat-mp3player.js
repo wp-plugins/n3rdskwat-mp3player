@@ -9,7 +9,11 @@ function n3s_initialize_scripts() {
 	 *   Add checks like lightbox to this function...
 	 */
 	
+	// Lightbox support:
 	if(typeof initLightbox == 'function') initLightbox();
+	
+	// NextGen Gallery support:
+	if(typeof shutterOnload == 'function') shutterOnload();
 }
 
 
@@ -26,9 +30,7 @@ var n3s_has_scrolled = false;
 var n3s_last_url;
 var n3s_current_url;
 
-var $j = jQuery.noConflict();
-
-$j(document).ready(function() {
+n3s_document_ready = function() {
 	if(n3s_replaced_body) return;
 	   n3s_replaced_body = true;
 	
@@ -43,49 +45,51 @@ $j(document).ready(function() {
 	
 	var flash_code = '<OBJECT type="application/x-shockwave-flash" data="'+n3s_settings.path+'/swf/n3rdskwat-mp3player.swf" WIDTH="300" HEIGHT="35" id="n3s_flash"><PARAM NAME=movie VALUE="'+n3s_settings.path+'/swf/n3rdskwat-mp3player.swf"><PARAM NAME=quality VALUE=high><PARAM NAME=wmode VALUE="transparent"><param name="FlashVars" value="randomize='+n3s_settings.randomize+'&autoplay='+n3s_settings.autoplay+'&repeatall='+n3s_settings.repeatall+'&plugin_path='+n3s_settings.path+'" /></OBJECT>';
 	
-	var html = $j(document.body).html();
-	$j(document.body).html(error_window_code +  playlist_code + playerbar_code + body_code);
+	var html = jQuery(document.body).html();
+	jQuery(document.body).html(error_window_code +  playlist_code + playerbar_code + body_code);
 	
 	if(!n3s_get_current_page()) {
-		$j('#n3s_body').html(html);
+		jQuery('#n3s_body').html(html);
+	} else {
+		n3s_initialize_scripts();
 	}
 	
 	// playlist button on the right -> playlist_button_code first
 	// else flash_code first!
 	
-	$j('#n3s_mp3player').css('background', n3s_settings.background);
+	jQuery('#n3s_mp3player').css('background', n3s_settings.background);
 	
 	if(n3s_settings.playlist == 1) {
-		$j('#n3s_playlist').css('background', n3s_settings.background);
+		jQuery('#n3s_playlist').css('background', n3s_settings.background);
 	}
 	
 	if(n3s_settings.position.indexOf('top') > -1) {
-		$j('#n3s_mp3player').css('border-top', '0px');
-		$j('#n3s_mp3player').css('border-bottom', n3s_settings.border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
-		$j('#n3s_mp3player').css('bottom');
-		$j('#n3s_mp3player').css('top', '0px');
+		jQuery('#n3s_mp3player').css('border-top', '0px');
+		jQuery('#n3s_mp3player').css('border-bottom', n3s_settings.border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
+		jQuery('#n3s_mp3player').css('bottom');
+		jQuery('#n3s_mp3player').css('top', '0px');
 		
 		if(n3s_settings.playlist == 1) {
-			$j('#n3s_playlist').css('border', n3s_settings.playlist_border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
-			$j('#n3s_playlist').css('border-top', '0px');
+			jQuery('#n3s_playlist').css('border', n3s_settings.playlist_border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
+			jQuery('#n3s_playlist').css('border-top', '0px');
 			
-			$j('#n3s_playlist').css('bottom');
-			$j('#n3s_playlist').css('top', '35px');
+			jQuery('#n3s_playlist').css('bottom');
+			jQuery('#n3s_playlist').css('top', '35px');
 		}
 		
-		$j('#n3s_body').css('margin-bottom', '0px');
-		$j('#n3s_body').css('margin-top', '50px');
+		jQuery('#n3s_body').css('margin-bottom', '0px');
+		jQuery('#n3s_body').css('margin-top', '50px');
 	} else {
-		$j('#n3s_mp3player').css('border-top', n3s_settings.border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
-		$j('#n3s_mp3player').css('border-bottom', '0px');
+		jQuery('#n3s_mp3player').css('border-top', n3s_settings.border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
+		jQuery('#n3s_mp3player').css('border-bottom', '0px');
 		
 		if(n3s_settings.playlist == 1) {
-			$j('#n3s_playlist').css('border', n3s_settings.playlist_border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
-			$j('#n3s_playlist').css('border-bottom', '0px');
+			jQuery('#n3s_playlist').css('border', n3s_settings.playlist_border + 'px ' + n3s_settings.border_style + ' ' + n3s_settings.border_color);
+			jQuery('#n3s_playlist').css('border-bottom', '0px');
 		}
 		
-		$j('#n3s_body').css('margin-bottom', '50px');
-		$j('#n3s_body').css('margin-top', '0px');
+		jQuery('#n3s_body').css('margin-bottom', '50px');
+		jQuery('#n3s_body').css('margin-top', '0px');
 	}
 	
 	var player_html = flash_code + playlist_button_code;
@@ -95,40 +99,40 @@ $j(document).ready(function() {
 	}
 	
 	// add the divs to the player-holder
-	$j('#n3s_mp3player').html(player_html);
+	jQuery('#n3s_mp3player').html(player_html);
 	
 	// apply positioning of the flash
-	$j('#n3s_flash').css('position', 'relative');
+	jQuery('#n3s_flash').css('position', 'relative');
 	if(n3s_settings.position.indexOf('left') > -1) {
-		$j('#n3s_flash').css('float', 'left');
-		$j('#n3s_flash').css('margin-left', '5px');
+		jQuery('#n3s_flash').css('float', 'left');
+		jQuery('#n3s_flash').css('margin-left', '5px');
 	} else if(n3s_settings.position.indexOf('center') > 1) {
-		$j('#n3s_flash').css('position', 'absolute');
-		$j('#n3s_flash').css('left', '50%');
-		$j('#n3s_flash').css('margin-left', ((n3s_settings.playlist == '1')?'-190':'-150') + 'px');
-		$j('#n3s_flash').css('margin-right', '5px');
+		jQuery('#n3s_flash').css('position', 'absolute');
+		jQuery('#n3s_flash').css('left', '50%');
+		jQuery('#n3s_flash').css('margin-left', ((n3s_settings.playlist == '1')?'-190':'-150') + 'px');
+		jQuery('#n3s_flash').css('margin-right', '5px');
 	} else {
-		$j('#n3s_flash').css('float', 'right');
-		$j('#n3s_flash').css('margin-right', '5px');
+		jQuery('#n3s_flash').css('float', 'right');
+		jQuery('#n3s_flash').css('margin-right', '5px');
 	}
 	
 	// apply positioning of the playlist button (if enabled)
 	if(n3s_settings.playlist == 1) {
-		$j('#n3s_playlist_button').css('position', 'relative');
+		jQuery('#n3s_playlist_button').css('position', 'relative');
 		if(n3s_settings.position.indexOf('left') > -1) {
-			$j('#n3s_playlist').css('left', '5px');
-			$j('#n3s_playlist_button').css('float', 'left');
-			$j('#n3s_playlist_button').css('margin-left', '10px');
+			jQuery('#n3s_playlist').css('left', '5px');
+			jQuery('#n3s_playlist_button').css('float', 'left');
+			jQuery('#n3s_playlist_button').css('margin-left', '10px');
 		} else if(n3s_settings.position.indexOf('center') > 1) {
-			$j('#n3s_playlist').css('left', '50%');
-			$j('#n3s_playlist').css('margin-left', '-183px');
-			$j('#n3s_playlist_button').css('position', 'absolute');
-			$j('#n3s_playlist_button').css('left', '50%');
-			$j('#n3s_playlist_button').css('margin-left', '120px');
+			jQuery('#n3s_playlist').css('left', '50%');
+			jQuery('#n3s_playlist').css('margin-left', '-183px');
+			jQuery('#n3s_playlist_button').css('position', 'absolute');
+			jQuery('#n3s_playlist_button').css('left', '50%');
+			jQuery('#n3s_playlist_button').css('margin-left', '120px');
 		} else {
-			$j('#n3s_playlist').css('right', '5px');
-			$j('#n3s_playlist_button').css('float', 'right');
-			$j('#n3s_playlist_button').css('margin-right', '10px');
+			jQuery('#n3s_playlist').css('right', '5px');
+			jQuery('#n3s_playlist_button').css('float', 'right');
+			jQuery('#n3s_playlist_button').css('margin-right', '10px');
 		}
 	}
 	
@@ -136,34 +140,36 @@ $j(document).ready(function() {
 	var flash = n3s_get_flash_movie('n3s_flash');
 	if(!flash) {
 		if(n3s_settings.playlist == 1) {
-			$j('#n3s_playlist_button :input').attr('disabled', 'disabled');
+			jQuery('#n3s_playlist_button :input').attr('disabled', 'disabled');
 		} else {
 			n3s_settings.playlist == 0;
 		}
 	}
 	
 	// apply opacity to the player and playlist
-	$j('#n3s_mp3player').fadeTo(0, n3s_settings.opacity);
-	$j('#n3s_playlist').fadeTo(0, n3s_settings.opacity);
+	jQuery('#n3s_mp3player').fadeTo(0, n3s_settings.opacity);
+	jQuery('#n3s_playlist').fadeTo(0, n3s_settings.opacity);
 	
 	// change all links + forms to be ajax-controlled
 	n3s_replace_links();
 	n3s_replace_forms();
 	
 	// scroll to the top
-	$j(window).scrollTo(0, 0);
-});
+	jQuery(window).scrollTo(0, 0);
+}
+
+jQuery(document).ready(n3s_document_ready);
 
 
 // toggle showing the playlist
 var n3s_playlist_shown = false;
 function n3s_toggle_playlist() {
 	if(n3s_playlist_shown) {
-		$j('#n3s_playlist').hide();
+		jQuery('#n3s_playlist').hide();
 	} else {
 		n3s_populate_playlist();
-		$j('#n3s_playlist').show();
-		$j('#n3s_playlist').scrollTo($j('#n3s_playlist_item_' + n3s_playlist_playing_index));
+		jQuery('#n3s_playlist').show();
+		jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
 	}
 	
 	n3s_playlist_shown = !n3s_playlist_shown;
@@ -185,9 +191,9 @@ function n3s_highlight_playlist_item(path) {
 		if(n3s_playlist[i].dir + '/' + n3s_playlist[i].filename == path) {
 			n3s_playlist_playing_index = i;
 			
-			$j('#n3s_playlist_item_' + i).css('color', n3s_settings.playlist_active_text);
-			$j('#n3s_playlist_item_' + i).css('background', n3s_settings.playlist_active_background);
-			$j('#n3s_playlist_item_' + i).unbind('mouseenter mouseleave');
+			jQuery('#n3s_playlist_item_' + i).css('color', n3s_settings.playlist_active_text);
+			jQuery('#n3s_playlist_item_' + i).css('background', n3s_settings.playlist_active_background);
+			jQuery('#n3s_playlist_item_' + i).unbind('mouseenter mouseleave');
 			return;
 		}
 	}
@@ -220,7 +226,7 @@ function n3s_set_playlist_item(path, title) {
 		for(var i = 0; i < n3s_playlist.length; i++) {
 			if(n3s_playlist[i].dir + '/' + n3s_playlist[i].filename == path) {
 				n3s_playlist[i].title = title;
-				$j('#n3s_playlist_item_'+i).text(title);
+				jQuery('#n3s_playlist_item_'+i).text(title);
 			}
 		}
 	}
@@ -251,12 +257,12 @@ function n3s_populate_playlist() {
 	if(n3s_playlist_populated > 0) return;
 		n3s_playlist_populated = date.getTime();
 	
-	$j('#n3s_playlist_button :input').attr('disabled', 'disabled');
+	jQuery('#n3s_playlist_button :input').attr('disabled', 'disabled');
 	
-	$j('#n3s_playlist').css('height', '200px');
-	$j('#n3s_playlist').html('<h3>loading...</h3');
+	jQuery('#n3s_playlist').css('height', '200px');
+	jQuery('#n3s_playlist').html('<h3>loading...</h3');
 	
-	$j.ajax({
+	jQuery.ajax({
 		url: n3s_settings.path + 'n3rdskwat-mp3player-list.php?type=json',
 		type: 'GET',
 		dataType: 'html',
@@ -265,14 +271,14 @@ function n3s_populate_playlist() {
 			
 			var mp3player_border;
 			if(n3s_settings.position.indexOf('top') == -1) {
-				mp3player_border = parseInt($j('#n3s_mp3player').css('border-top-width')) - 1;
+				mp3player_border = parseInt(jQuery('#n3s_mp3player').css('border-top-width')) - 1;
 			} else {
-				mp3player_border = parseInt($j('#n3s_mp3player').css('border-bottom-width')) + 1;
+				mp3player_border = parseInt(jQuery('#n3s_mp3player').css('border-bottom-width')) + 1;
 			}
 			
 			if(!n3s_playlist) {
-				$j('#n3s_playlist').html('<div class="n3s_playlist_item">No mp3\'s found.</div>');
-				$j('#n3s_playlist').css('height', $j('.n3s_playlist_item').height() + mp3player_border);
+				jQuery('#n3s_playlist').html('<div class="n3s_playlist_item">No mp3\'s found.</div>');
+				jQuery('#n3s_playlist').css('height', jQuery('.n3s_playlist_item').height() + mp3player_border);
 				
 				// set dummy data for correct height calculations; .length needs to have the value '1'
 				data = new Array('empty');
@@ -286,38 +292,38 @@ function n3s_populate_playlist() {
 					html += '<div class="n3s_playlist_item" id="n3s_playlist_item_'+i+'" onclick="n3s_load_item(\''+n3s_playlist[i].dir+'\/'+n3s_playlist[i].filename+'\')">' + n3s_playlist[i].title + '</div>';
 				}
 				
-				$j('#n3s_playlist').html(html);
+				jQuery('#n3s_playlist').html(html);
 			}
 			
 			n3s_highlight_playlist_item(n3s_currently_playing);
 			
-			var item_height = $j('.n3s_playlist_item').height();
+			var item_height = jQuery('.n3s_playlist_item').height();
 			var playlist_height = (item_height * n3s_playlist.length + mp3player_border > 200)?200:item_height * n3s_playlist.length + mp3player_border;
 			
-			$j('#n3s_playlist').css('height', playlist_height + 'px');
-			$j('#n3s_playlist').scrollTo($j('#n3s_playlist_item_' + n3s_playlist_playing_index));
+			jQuery('#n3s_playlist').css('height', playlist_height + 'px');
+			jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
 			
-			$j('#n3s_playlist_button :input').attr('disabled', '');
+			jQuery('#n3s_playlist_button :input').attr('disabled', '');
 		}
 	});
 }
 
 function n3s_set_playlist_items_style() {
-	$j('.n3s_playlist_item').css('color', n3s_settings.playlist_text);
-	$j('.n3s_playlist_item').css('background', n3s_settings.background);
-	$j('.n3s_playlist_item').hover(function(){
-		$j(this).css('background', n3s_settings.playlist_hover);
+	jQuery('.n3s_playlist_item').css('color', n3s_settings.playlist_text);
+	jQuery('.n3s_playlist_item').css('background', n3s_settings.background);
+	jQuery('.n3s_playlist_item').hover(function(){
+		jQuery(this).css('background', n3s_settings.playlist_hover);
 	}, function() {
-		$j(this).css('background', n3s_settings.background);
+		jQuery(this).css('background', n3s_settings.background);
 	});
 }
 
 function n3s_post_form(form) {
-	var action = $j(form).attr('action');
-	var method = $j(form).attr('method').toUpperCase();
-	var inputs = $j(form).find(':input');
+	var action = jQuery(form).attr('action');
+	var method = jQuery(form).attr('method').toUpperCase();
+	var inputs = jQuery(form).find(':input');
 	
-	$j.ajax({
+	jQuery.ajax({
 		url: action,
 		type: method,
 		data: inputs.serialize(),
@@ -336,7 +342,7 @@ function n3s_follow_url(url, target) {
 	
 	if(url.indexOf('#') == 0) {
 		var a_name = url.substr(url.indexOf('#')+1);
-		$j(window).scrollTo($j('#'+a_name));
+		jQuery(window).scrollTo(jQuery('#'+a_name));
 		return;
 	}
 	
@@ -376,7 +382,12 @@ function n3s_follow_url(url, target) {
 		return;
 	}
 	
-	$j.ajax({
+	/*
+	jQuery.isReady = false;
+	jQuery(document).ready(n3s_document_ready);
+	*/
+	
+	jQuery.ajax({
 		url: url,
 		cache: false, 
 		success: function(html) {
@@ -392,8 +403,8 @@ function n3s_show_error(error) {
 		error = error.substr(error.indexOf('<body'));
 		error = error.substr(error.indexOf('>')+1);
 		
-		$j('#n3s_error_text').html(error);
-		$j('#n3s_error').show();
+		jQuery('#n3s_error_text').html(error);
+		jQuery('#n3s_error').show();
 		
 		n3s_showing_error = true;
 	}
@@ -403,7 +414,7 @@ function n3s_close_error() {
 	if(!n3s_showing_error) return;
 		n3s_showing_error = false;
 	
-	$j('#n3s_error').hide();
+	jQuery('#n3s_error').hide();
 }
 
 function n3s_replace_body(html) {
@@ -418,8 +429,8 @@ function n3s_replace_body(html) {
 		
 		if(body_class) {
 			if(body_class[1] != '') {
-				$j(document.body).removeClass();
-				$j(document.body).addClass(body_class[1]);
+				jQuery(document.body).removeClass();
+				jQuery(document.body).addClass(body_class[1]);
 			}
 		}
 		
@@ -429,15 +440,15 @@ function n3s_replace_body(html) {
 		if(document.getElementById) {
 			document.getElementById('n3s_body').innerHTML = html;
 		} else {
-			$j('#n3s_body').html(html);
+			jQuery('#n3s_body').html(html);
 		}
 		
 		// if we have a position, scroll to it
 		if(n3s_current_url.indexOf('#') > -1) {
 			var a_name = n3s_current_url.substr(n3s_current_url.indexOf('#')+1);
-			$j(window).scrollTo($j('#'+a_name));
+			jQuery(window).scrollTo(jQuery('#'+a_name));
 		} else {
-			$j(window).scrollTo(0, 0);
+			jQuery(window).scrollTo(0, 0);
 		}
 		
 		// don't update current page if it's only a scroll tag!
@@ -459,28 +470,28 @@ function n3s_replace_body(html) {
 }
 
 function n3s_replace_links(domEle) {
-	$j('#n3s_body').find('a').each(function(index, domEle) {
-		var href = $j(domEle).attr('href');	
-		var target = $j(domEle).attr('target');
+	jQuery('#n3s_body').find('a').each(function(index, domEle) {
+		var href = jQuery(domEle).attr('href');	
+		var target = jQuery(domEle).attr('target');
 		
 		var image = /(.*?)(.gif|.jpeg|.jpg|.png)(.*?)/.test(href);
 		var javascript = /^javascript:(.*?)/.test(href);
 		
 		// only replace tags if it doesn't contain any javascript
 		if(href != "" && !image && !javascript) {
-			$j(domEle).attr('href', "javascript:n3s_follow_url('"+href+"', '"+target+"');");
+			jQuery(domEle).attr('href', "javascript:n3s_follow_url('"+href+"', '"+target+"');");
 		}
 		
 		// remove target preventing the 'javascript:' url being opened.. we will open in a new window if needed!
-		$j(domEle).attr('target', '');
+		jQuery(domEle).attr('target', '');
 	});
 }
 
 function n3s_replace_forms() {
-	$j("form").unbind("submit");
-	$j("form").bind("submit", function(event) {
+	jQuery("form").unbind("submit");
+	jQuery("form").bind("submit", function(event) {
 												  
-		action = $j(this).attr('action');
+		action = jQuery(this).attr('action');
 		
 		var new_domain = action.replace('http://', '');
 		var cur_domain = n3s_current_url.replace('http://', '');
