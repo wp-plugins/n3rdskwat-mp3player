@@ -65,6 +65,10 @@ Or, if you know something about javascript, you can add the function-call to the
 
 == Changelog ==
 
+= 1.1.9 =
+* Added extra checks for forms that are posted off-domain (like payola)
+* Fixed a minor bug for staying at the current page after reloading
+
 = 1.1.8 =
 * Sorry something went wrong updating to SVN
 
