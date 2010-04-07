@@ -1,12 +1,12 @@
 === n3rdskwat-mp3player ===
 Contributors: n3rdskwat-jmf
-Donate link: http://www.n3rdskwat.com/
+Donate link: http://www.n3rdskwat.com/code/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable
 Requires at least: 2.6.0
 Tested up to: 2.9.2
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 
-Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog.
+Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure in tact!
 
 == Description ==
 
@@ -26,7 +26,6 @@ Important Links:
 Features
 
 * Adds a simple mp3 player to your blog
-* Converts your blog to a AJAX controlled environment
 * Scans your whole website or specified directory for mp3's to put in the playlist
 * Automatically start playing on entering the blog
 * Randomize mp3 playback
@@ -34,11 +33,16 @@ Features
 * Displaying of the playlist
 * Where to search for mp3's
 * Easily customizable positioning and layout properties
+* Converts your blog to a AJAX controlled environment
+* Keeps the SEO (search engine optimization) structure in tact!
 
 == Installation ==
 
-1. Activate the plugin through the 'Plugins' menu in WordPress
-2. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
+1. Download the plugin through the build-in plugin-search
+2. Or download it manually and place it in your plugin directory  
+3. Activate the plugin through the 'Plugins' menu in WordPress
+4. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
+5. When other plugins fail to work properly please contact me at the plugin-website so I can build in a solution.
 
 == Frequently Asked Questions ==
 

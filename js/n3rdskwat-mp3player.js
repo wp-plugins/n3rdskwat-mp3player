@@ -385,8 +385,6 @@ function n3s_follow_url(url, target) {
 			n3s_last_url = '';
 		}
 	});
-	
-	n3s_set_current_page();
 }
 
 function n3s_show_error(error) {
@@ -409,6 +407,8 @@ function n3s_close_error() {
 }
 
 function n3s_replace_body(html) {
+	n3s_set_current_page();
+	
 	// html type will be other then 'string' when loading XML or images
 	if(typeof html == 'string') {
 		html = html.substr(html.indexOf('<body'));
@@ -476,10 +476,21 @@ function n3s_replace_links(domEle) {
 function n3s_replace_forms() {
 	$j("form").unbind("submit");
 	$j("form").bind("submit", function(event) {
-		n3s_post_form(this);
+												  
+		action = $j(this).attr('action');
 		
-		// prevent from following the form's default action
-		event.preventDefault();
+		var new_domain = action.replace('http://', '');
+		var cur_domain = n3s_current_url.replace('http://', '');
+		
+		new_domain = (new_domain.indexOf('/') > -1)?new_domain.substr(0, new_domain.indexOf('/')):new_domain;
+		cur_domain = (cur_domain.indexOf('/') > -1)?cur_domain.substr(0, cur_domain.indexOf('/')):cur_domain;
+		
+		if(new_domain == cur_domain) {
+			n3s_post_form(this);
+		
+			// prevent from following the form's default action
+			event.preventDefault();
+		}
 	});
 }
 
@@ -491,14 +502,14 @@ function n3s_get_flash_movie(movie_name) {
 var n3s_page_cookie_reset;
 function n3s_set_current_page() {
 	if(!n3s_page_cookie_reset) {
-		n3s_page_cookie_reset = setInterval('n3s_set_current_page();', 10*60*1000); // re-set every 10 minutes
+		n3s_page_cookie_reset = setInterval('n3s_set_current_page()', 10*60*1000); // re-set every 10 minutes
 	}
 	
 	var date = new Date();
 	date.setTime(date.getTime()+(10*60*1000)); // expires in 10 minutes
-	var expires = "; expires="+date.toGMTString();
+	var expires = "expires="+date.toGMTString();
 	
-	document.cookie = "current_page="+n3s_current_url+expires+"; path=/";
+	document.cookie = "current_page="+n3s_current_url+"; "+expires+"; path=/";
 }
 
 function n3s_get_current_page() {
