@@ -4,7 +4,7 @@ Donate link: http://www.n3rdskwat.com/code/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable
 Requires at least: 2.6.0
 Tested up to: 2.9.2
-Stable tag: 1.1.9
+Stable tag: 1.1.10
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure in tact!
 
@@ -64,6 +64,9 @@ Or, if you know something about javascript, you can add the function-call to the
 3. playlist disabled
 
 == Changelog ==
+
+= 1.1.10 =
+* Small fixes regarding loading mp3-links with full domain urls (on the same domain as the player)
 
 = 1.1.9 =
 * Added extra checks for forms that are posted off-domain (like payola)

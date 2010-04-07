@@ -351,11 +351,11 @@ function n3s_follow_url(url, target) {
 		if(url.substr(0, 1) == "/") {
 			n3s_load_item(url);
 			return;
-			
 		} else if(url.indexOf('http://') > -1) {
 			// dont load cross-domain
 			if(new_domain == cur_domain) {
 				n3s_load_item(url.replace('http://', '').replace(new_domain, ''));
+				return;
 			}
 		}
 	}
@@ -407,8 +407,6 @@ function n3s_close_error() {
 }
 
 function n3s_replace_body(html) {
-	n3s_set_current_page();
-	
 	// html type will be other then 'string' when loading XML or images
 	if(typeof html == 'string') {
 		html = html.substr(html.indexOf('<body'));
@@ -440,6 +438,11 @@ function n3s_replace_body(html) {
 			$j(window).scrollTo($j('#'+a_name));
 		} else {
 			$j(window).scrollTo(0, 0);
+		}
+		
+		// don't update current page if it's only a scroll tag!
+		if(n3s_current_url.substr(0, 1) != "#") {
+			n3s_set_current_page();
 		}
 		
 		// re-initialize script for new content
