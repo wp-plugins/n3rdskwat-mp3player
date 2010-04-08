@@ -1,10 +1,10 @@
 === n3rdskwat-mp3player ===
 Contributors: n3rdskwat-jmf
 Donate link: http://www.n3rdskwat.com/code/
-Tags: mp3, flash, ajax, playlist, adjustable, customizable
+Tags: mp3, flash, ajax, playlist, adjustable, customizable, music
 Requires at least: 2.6.0
 Tested up to: 2.9.2
-Stable tag: 1.1.11
+Stable tag: 1.1.12
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure in tact!
 
@@ -33,18 +33,27 @@ Features
 * Displaying of the playlist
 * Where to search for mp3's
 * Easily customizable positioning and layout properties
-* Converts your blog to a AJAX controlled environment
+* Converts your blog to an AJAX controlled environment
 * Keeps the SEO (search engine optimization) structure in tact!
 
 == Installation ==
 
-1. Download the plugin through the build-in plugin-search
-2. Or download it manually and place it in your plugin directory  
-3. Activate the plugin through the 'Plugins' menu in WordPress
+1. Download the plugin through the build-in plugin-search.
+2. Or download it manually and extract it in your plugins directory.
+3. Activate the plugin through the 'Plugins' menu in WordPress.
 4. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
 5. When other plugins fail to work properly please contact me at the plugin-website so I can build in a solution.
 
 == Frequently Asked Questions ==
+
+= The plugin screws up my design!? =
+
+If the mp3player rips your design apart, you can try to add a couple of lines to your stylesheet:
+
+#n3s_body { margin: 0px !important; }
+#n3s_body { position: relative; }
+
+Are suggestions that have worked on other theme's, I hope it will help you fix your style back to normal!
 
 = The plugin [x] only works on the first page I load =
 
@@ -57,6 +66,10 @@ If you have plugins that stop working, please let me know so I can add them to t
 
 Or, if you know something about javascript, you can add the function-call to the 'n3s_initialize_scripts()' function in the '<n3rdskwat-plugin-directory>/js/n3rdskwat-mp3player.js' file.
 
+= Why doesn't WP Ajax Edit Comments work? =
+
+The WP Ajax Edit Comments plugin uses a strange way on the document.ready functionality. This way I can't reproduce the code when a new page is loaded, which is vital for correct plugin functionality. As long as they don't change the way the plugin works, I cannot make the mp3player compatible with WP Ajax Edit Comments.
+
 == Screenshots ==
 
 1. mp3player in default settings
@@ -64,6 +77,11 @@ Or, if you know something about javascript, you can add the function-call to the
 3. playlist disabled
 
 == Changelog ==
+
+= 1.1.12 =
+* Changed current-page-cookie to be removed when the browser is closed
+* Added functionality to stop catching links that have click or mousedown events on them
+* Fixed a bug that removes 'target' attribute from links that aren't caught
 
 = 1.1.11 =
 * Added support for NextGen-Gallery

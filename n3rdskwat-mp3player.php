@@ -3,12 +3,12 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.1.11
+Version: 1.1.12
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
 
-    Copyright 2010  Jip Moors  (email : j.moors@home.nl)
+    Copyright 2010  Jip Moors  (email: j . moors [a t] home.nl)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -60,17 +60,13 @@ if($wp_version >= '2.6.0') {
 
 /* options page (required for saving prefs)*/
 $options_page = get_option('siteurl') . '/wp-admin/admin.php?page=n3rdskwat-mp3player/options.php';
+
 /* Adds our admin options under "Options" */
-
-
 function n3rdskwat_flashmp3player_options_page() {
 	add_options_page('n3rdskwat - mp3player', 'n3rdskwat mp3player', 10, 'n3rdskwat-mp3player/options.php');
 }
 
-
 function n3rdskwat_mp3player_styles() {
-	/* What version of WP is running? */
-	global $wp_version;
 	global $n3rdskwat_mp3player_plugin_prefix;
 	
 	/*Get options for form fields*/
@@ -99,7 +95,7 @@ function n3rdskwat_mp3player_styles() {
 	
     /* The next line figures out where the javascripts and images and CSS are installed,
     relative to your wordpress server's root: */
-    $n3rdskwat_mp3player_style_path = ($n3rdskwat_mp3player_plugin_prefix."css/");
+    $n3rdskwat_mp3player_style_path = $n3rdskwat_mp3player_plugin_prefix."css/";
 
     /* The xhtml header code needed for lightbox to work: */
 	$n3rdskwat_mp3player_script = "

@@ -14,6 +14,7 @@ function n3s_initialize_scripts() {
 	
 	// NextGen Gallery support:
 	if(typeof shutterOnload == 'function') shutterOnload();
+	
 }
 
 
@@ -50,8 +51,6 @@ n3s_document_ready = function() {
 	
 	if(!n3s_get_current_page()) {
 		jQuery('#n3s_body').html(html);
-	} else {
-		n3s_initialize_scripts();
 	}
 	
 	// playlist button on the right -> playlist_button_code first
@@ -155,7 +154,9 @@ n3s_document_ready = function() {
 	n3s_replace_forms();
 	
 	// scroll to the top
-	jQuery(window).scrollTo(0, 0);
+	try {
+		jQuery(window).scrollTo(0, 0);
+	} catch(e) {}
 }
 
 jQuery(document).ready(n3s_document_ready);
@@ -169,7 +170,9 @@ function n3s_toggle_playlist() {
 	} else {
 		n3s_populate_playlist();
 		jQuery('#n3s_playlist').show();
-		jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
+		try {
+			jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
+		} catch(e) {}
 	}
 	
 	n3s_playlist_shown = !n3s_playlist_shown;
@@ -300,8 +303,10 @@ function n3s_populate_playlist() {
 			var item_height = jQuery('.n3s_playlist_item').height();
 			var playlist_height = (item_height * n3s_playlist.length + mp3player_border > 200)?200:item_height * n3s_playlist.length + mp3player_border;
 			
-			jQuery('#n3s_playlist').css('height', playlist_height + 'px');
-			jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
+			jQuery('#n3s_playlist').css('height', playlist_height + 'px')
+			try {
+				jQuery('#n3s_playlist').scrollTo(jQuery('#n3s_playlist_item_' + n3s_playlist_playing_index));
+			} catch(e) {}
 			
 			jQuery('#n3s_playlist_button :input').attr('disabled', '');
 		}
@@ -342,7 +347,11 @@ function n3s_follow_url(url, target) {
 	
 	if(url.indexOf('#') == 0) {
 		var a_name = url.substr(url.indexOf('#')+1);
-		jQuery(window).scrollTo(jQuery('#'+a_name));
+		
+		try {
+			jQuery(window).scrollTo(jQuery('#'+a_name));
+		} catch(e) {}
+		
 		return;
 	}
 	
@@ -382,11 +391,6 @@ function n3s_follow_url(url, target) {
 		return;
 	}
 	
-	/*
-	jQuery.isReady = false;
-	jQuery(document).ready(n3s_document_ready);
-	*/
-	
 	jQuery.ajax({
 		url: url,
 		cache: false, 
@@ -424,12 +428,13 @@ function n3s_replace_body(html) {
 		var body_tags = html.substr(0, html.indexOf('>'));
 		html = html.substr(html.indexOf('>')+1);
 		
+		jQuery(document.body).removeClass();
+		
 		var find_class = /class=['"](.*?)['"]/;
 		body_class = find_class.exec(body_tags);
 		
 		if(body_class) {
 			if(body_class[1] != '') {
-				jQuery(document.body).removeClass();
 				jQuery(document.body).addClass(body_class[1]);
 			}
 		}
@@ -443,13 +448,15 @@ function n3s_replace_body(html) {
 			jQuery('#n3s_body').html(html);
 		}
 		
-		// if we have a position, scroll to it
-		if(n3s_current_url.indexOf('#') > -1) {
-			var a_name = n3s_current_url.substr(n3s_current_url.indexOf('#')+1);
-			jQuery(window).scrollTo(jQuery('#'+a_name));
-		} else {
-			jQuery(window).scrollTo(0, 0);
-		}
+		try {
+			// if we have a position, scroll to it
+			if(n3s_current_url.indexOf('#') > -1) {
+				var a_name = n3s_current_url.substr(n3s_current_url.indexOf('#')+1);
+				jQuery(window).scrollTo(jQuery('#'+a_name));
+			} else {
+				jQuery(window).scrollTo(0, 0);
+			}
+		} catch(e) {}
 		
 		// don't update current page if it's only a scroll tag!
 		if(n3s_current_url.substr(0, 1) != "#") {
@@ -477,13 +484,17 @@ function n3s_replace_links(domEle) {
 		var image = /(.*?)(.gif|.jpeg|.jpg|.png)(.*?)/.test(href);
 		var javascript = /^javascript:(.*?)/.test(href);
 		
-		// only replace tags if it doesn't contain any javascript
-		if(href != "" && !image && !javascript) {
-			jQuery(domEle).attr('href', "javascript:n3s_follow_url('"+href+"', '"+target+"');");
-		}
+		var onclick = jQuery(domEle).attr('onclick');
+		var onmousedown = jQuery(domEle).attr('onmousedown');
+		var onmouseup = jQuery(domEle).attr('onmouseup');
 		
-		// remove target preventing the 'javascript:' url being opened.. we will open in a new window if needed!
-		jQuery(domEle).attr('target', '');
+		// only replace tags if it doesn't contain any javascript
+		if(href != "" && !image && !javascript && !onclick && !onmousedown && !onmouseup) {
+			jQuery(domEle).attr('href', "javascript:n3s_follow_url('"+href+"', '"+target+"');");
+			
+			// remove target preventing the 'javascript:' url being opened.. we will open in a new window if needed!
+			jQuery(domEle).attr('target', '');
+		}
 	});
 }
 
@@ -513,17 +524,8 @@ function n3s_get_flash_movie(movie_name) {
 	return (isIE)?window[movie_name]:document[movie_name];
 }
 
-var n3s_page_cookie_reset;
 function n3s_set_current_page() {
-	if(!n3s_page_cookie_reset) {
-		n3s_page_cookie_reset = setInterval('n3s_set_current_page()', 10*60*1000); // re-set every 10 minutes
-	}
-	
-	var date = new Date();
-	date.setTime(date.getTime()+(10*60*1000)); // expires in 10 minutes
-	var expires = "expires="+date.toGMTString();
-	
-	document.cookie = "current_page="+n3s_current_url+"; "+expires+"; path=/";
+	document.cookie = "current_page="+n3s_current_url+"; path=/";
 }
 
 function n3s_get_current_page() {
