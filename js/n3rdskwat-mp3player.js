@@ -363,15 +363,16 @@ function n3s_follow_url(url, target) {
 	
 	// load mp3 if link is an mp3 on the same domain:
 	if(url.indexOf(".mp3") > -1) {
-		if(url.substr(0, 1) == "/") {
-			n3s_load_item(url);
-			return;
-		} else if(url.indexOf('http://') > -1) {
+		if(url.indexOf('http://') > -1) {
 			// dont load cross-domain
 			if(new_domain == cur_domain) {
-				n3s_load_item(url.replace('http://', '').replace(new_domain, ''));
+				n3s_load_item(url.replace(n3s_settings.baseurl, ''));
 				return;
 			}
+		}
+		else if(url.substr(0, 1) == "/") {
+			n3s_load_item(url);
+			return; 
 		}
 	}
 	
@@ -553,7 +554,8 @@ function n3s_read_cookie(name) {
 }
 
 
-n3s_settings_object = function(path, ap, rand, rep, pos, border, border_style, border_color, bg, opacity, pl, pl_text, pl_border, pl_hover, pl_active_text, pl_active_bg) {
+n3s_settings_object = function(blogurl, path, ap, rand, rep, pos, border, border_style, border_color, bg, opacity, pl, pl_text, pl_border, pl_hover, pl_active_text, pl_active_bg) {
+	this.baseurl = blogurl;
 	this.path = path;
 	this.autoplay = ap;
 	this.randomize = rand;

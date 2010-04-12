@@ -3,12 +3,12 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.1.12
+Version: 1.1.13
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
 
-    Copyright 2010  Jip Moors  (email: j . moors [a t] home.nl)
+    Copyright 2010  Jip Moors  (email : j.moors@home.nl)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -51,22 +51,28 @@ add_option("n3rdskwat_mp3path", "/");
 add_option("n3rdskwat_search_recusive", "1");
 
 
-/* use WP_PLUGIN_URL if version of WP >= 2.6.0. If earlier, use wp_url */
+/* use WP_PLUGIN_URL if version of WP >= 2.6.0. If earlier, use wpurl */
 if($wp_version >= '2.6.0') {
 	$n3rdskwat_mp3player_plugin_prefix = WP_PLUGIN_URL."/n3rdskwat-mp3player/"; /* plugins dir can be anywhere after WP2.6 */
+	$options_page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=n3rdskwat-mp3player/options.php';
 } else {
-	$n3rdskwat_mp3player_plugin_prefix = get_bloginfo('wpurl')."/wp-content/plugins/n3rdskwat-mp3player/";
+	$n3rdskwat_mp3player_plugin_prefix = get_bloginfo('siteurl')."/wp-content/plugins/n3rdskwat-mp3player/";
+	$options_page = get_bloginfo('siteurl') . '/wp-admin/admin.php?page=n3rdskwat-mp3player/options.php';
 }
 
-/* options page (required for saving prefs)*/
-$options_page = get_option('siteurl') . '/wp-admin/admin.php?page=n3rdskwat-mp3player/options.php';
+
 
 /* Adds our admin options under "Options" */
+
+
 function n3rdskwat_flashmp3player_options_page() {
 	add_options_page('n3rdskwat - mp3player', 'n3rdskwat mp3player', 10, 'n3rdskwat-mp3player/options.php');
 }
 
+
 function n3rdskwat_mp3player_styles() {
+	/* What version of WP is running? */
+	global $wp_version;
 	global $n3rdskwat_mp3player_plugin_prefix;
 	
 	/*Get options for form fields*/
@@ -95,7 +101,8 @@ function n3rdskwat_mp3player_styles() {
 	
     /* The next line figures out where the javascripts and images and CSS are installed,
     relative to your wordpress server's root: */
-    $n3rdskwat_mp3player_style_path = $n3rdskwat_mp3player_plugin_prefix."css/";
+	 
+    $n3rdskwat_mp3player_style_path = ($n3rdskwat_mp3player_plugin_prefix."css/");
 
     /* The xhtml header code needed for lightbox to work: */
 	$n3rdskwat_mp3player_script = "
@@ -103,7 +110,7 @@ function n3rdskwat_mp3player_styles() {
 <script type=\"text/javascript\">
 //<![CDATA[
 document.write('<link rel=\"stylesheet\" href=\"".$n3rdskwat_mp3player_style_path."n3rdskwat-mp3player.css\" type=\"text/css\" media=\"screen\" />');
-var n3s_settings = new n3s_settings_object('".$n3rdskwat_mp3player_plugin_prefix."', ".(($autoplay=='1')?1:0).", ".(($randomize=='1')?1:0).", ".(($repeatall=='1')?1:0).", '$vertical_position $horizontal_position', '$border_width', '$border_style', '$border_color', '$background', $opacity, ".(($playlist=='1')?1:0).", '$playlist_text', '$playlist_border', '$playlist_hover', '$playlist_active_color', '$playlist_active_bg');
+var n3s_settings = new n3s_settings_object('".get_bloginfo('wpurl')."', '".$n3rdskwat_mp3player_plugin_prefix."', ".(($autoplay=='1')?1:0).", ".(($randomize=='1')?1:0).", ".(($repeatall=='1')?1:0).", '$vertical_position $horizontal_position', '$border_width', '$border_style', '$border_color', '$background', $opacity, ".(($playlist=='1')?1:0).", '$playlist_text', '$playlist_border', '$playlist_hover', '$playlist_active_color', '$playlist_active_bg');
 //]]>
 </script>
 <!-- end n3rdskwat initialize scripts -->\n";

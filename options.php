@@ -1,9 +1,24 @@
 <?php
 $location = $options_page; // Form Action URI
 
+function get_blogpath() {
+	$document_root = "";
+	
+	$max_search_levels = 10;
+	$search_level = 0;
+	while(!is_file($document_root."wp-blog-header.php")) {
+		$document_root = "../" . $document_root;
+		
+		$search_level++;
+		if($search_level > $max_search_levels) {
+			die();
+		}
+	}
+	
+	return realpath($document_root);
+}
 
 $border_styles = array('none', 'solid', 'dashed', 'dotted');
-
 function validate_color($input, $default) {
 	// hex check
 	$hex = preg_match('/^#([0-9A-Fa-f]){6}$/', $input);
@@ -25,20 +40,30 @@ function validate_style($input, $default = 'solid') {
 	return $default;
 }
 
-function dir_listing($dir) {
-//	$dir = $_SERVER['DOCUMENT_ROOT'];
-	global $dirlist;
+function dir_listing(&$dirlist, $dir, $root) {
+	//global $dirlist;
 	
 	if(!is_array($dirlist)) {
 		$dirlist = array();
 	}
 	
+	// exclude the plugin_dir for reading mp3s
+	$plugin_dir = ($wp_version >= '2.6.0') ? WP_PLUGIN_DIR : $root . "/wp-content/plugins";
+	
 	$handle = opendir($dir);
 	while(false !== ($file = readdir($handle))) {
-		if (filetype($dir."/".$file) === 'dir' && $file != "." && $file != ".."){ 
-			clearstatcache();
-			array_push($dirlist, str_replace($_SERVER['DOCUMENT_ROOT'], "", $dir."/".$file));
-			dir_listing($dir."/".$file);
+		clearstatcache();
+		if (filetype($dir."/".$file) === 'dir' && $file != "." && $file != "..") {
+			
+			// exclude the wp-includes and wp-admin for reading
+			if($file != "wp-includes" && $file != "wp-admin" && $dir."/".$file != $plugin_dir) {
+				
+				// add the found directory to the list
+				array_push($dirlist, str_replace($root, "", $dir."/".$file));
+				
+				// check for sub-directories
+				dir_listing(&$dirlist, $dir."/".$file, $root);
+			}
 		}
 	}	
 }
@@ -106,7 +131,8 @@ $playlist_active_color = get_option('n3rdskwat_playlist_active_color');
 $playlist_active_background = get_option('n3rdskwat_playlist_active_background');
 
 
-dir_listing($_SERVER['DOCUMENT_ROOT']);
+$blog_root = get_blogpath();
+dir_listing($dirlist, $blog_root, $blog_root);
 
 ?>
 
@@ -150,7 +176,7 @@ dir_listing($_SERVER['DOCUMENT_ROOT']);
 				<td width="33%"><?php _e('Path to search for mp3\'s', 'n3rdskwat_mp3player') ?></td>
 				<td>
 					<select name="path" style="width: 200px;">
-					<option value="/"<?= (($path == "/")?" SELECTED":"") ?>>/</option>
+					<option value="/"<?= (($path == "/")?" SELECTED":"") ?>><?php _e('Entire blog', 'n3rdskwat_mp3player') ?></option>
 <?php
 foreach($dirlist as $dirname) {
 	$selected = ($path == $dirname)?" SELECTED":"";

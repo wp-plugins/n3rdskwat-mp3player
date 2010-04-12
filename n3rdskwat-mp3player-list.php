@@ -1,7 +1,39 @@
 <?php
 
+define('WP_USE_THEMES', false);
+
+/** Loads the WordPress Environment and Template */
+$document_root = "";
+
+$max_search_levels = 10;
+$search_level = 0;
+while(!is_file($document_root."wp-blog-header.php")) {
+	$document_root = "../" . $document_root;
+	
+	$search_level++;
+	if($search_level > $max_search_levels) {
+		die();
+	}
+}
+
+require($document_root.'wp-blog-header.php');
+
+$blog = get_bloginfo('url');
+$blog = str_replace("http://", "", $blog);
+
+$blog_parts = explode("/", $blog);
+if(count($blog_parts) > 1) {
+	$blog = "/" . end($blog_parts);
+} else {
+	$blog = "";
+}
+
+$document_root = realpath($document_root);
+
+
 function index_mp3s($dir, $recursive = true) {
 	global $mp3s;
+	global $document_root, $blog;
 	
 	if(!is_array($mp3s)) {
 		$mp3s = array();
@@ -27,7 +59,7 @@ function index_mp3s($dir, $recursive = true) {
 						$title = str_replace("_", " ", $title);
 						$title = ucwords($title);
 						
-						array_push($mp3s, array("dir"=>str_replace($_SERVER['DOCUMENT_ROOT'], '', $dir), "filename"=>$item, "title"=>$title, "date"=>filemtime($dir."/".$item) ));
+						array_push($mp3s, array("dir"=>str_replace($document_root, $blog, $dir), "filename"=>$item, "title"=>$title, "date"=>filemtime($dir."/".$item) ));
 					}
 				}
 			}
@@ -44,24 +76,6 @@ function rcmp($a, $b) {
 }
 
 
-define('WP_USE_THEMES', false);
-
-/** Loads the WordPress Environment and Template */
-$dir = "";
-
-$max_search_levels = 10;
-$search_level = 0;
-while(!is_file($dir."wp-blog-header.php")) {
-	$dir = "../" . $dir;
-	
-	$search_level++;
-	if($search_level > $max_search_levels) {
-		die();
-	}
-}
-
-require($dir.'wp-blog-header.php');
-
 $n3rdskwat_mp3path = get_option("n3rdskwat_mp3path");
 
 if($n3rdskwat_mp3path == "/") {
@@ -76,7 +90,7 @@ if(substr($n3rdskwat_mp3path, -1, 1) == "/") {
 	$n3rdskwat_mp3path = substr($n3rdskwat_mp3path, 0, strlen($n3rdskwat_mp3path)-1);
 }
 
-$n3rdskwat_mp3path = ($n3rdskwat_mp3path == "")?$_SERVER['DOCUMENT_ROOT']:$_SERVER['DOCUMENT_ROOT']."/".$n3rdskwat_mp3path;
+$n3rdskwat_mp3path = ($n3rdskwat_mp3path == "")?$document_root:$document_root."/".$n3rdskwat_mp3path;
 $recursive = get_option('n3rdskwat_search_recusive');
 
 $mp3s = array();
