@@ -14,7 +14,6 @@ function n3s_initialize_scripts() {
 	
 	// NextGen Gallery support:
 	if(typeof shutterOnload == 'function') shutterOnload();
-	
 }
 
 
@@ -245,6 +244,7 @@ function n3s_update_playlist(index) {
 
 // tell flash to load the specified item from the playlist
 function n3s_load_item(path) {
+	path = unescape(path);
 	var flash = n3s_get_flash_movie('n3s_flash');
 	try {
 		flash.playSong(path);
@@ -343,7 +343,7 @@ function n3s_post_form(form) {
 }
 
 function n3s_follow_url(url, target) {
-	n3s_last_url = url;
+	n3s_last_url = url;	
 	
 	if(url.indexOf('#') == 0) {
 		var a_name = url.substr(url.indexOf('#')+1);
@@ -491,10 +491,12 @@ function n3s_replace_links(domEle) {
 		
 		// only replace tags if it doesn't contain any javascript
 		if(href != "" && !image && !javascript && !onclick && !onmousedown && !onmouseup) {
-			jQuery(domEle).attr('href', "javascript:n3s_follow_url('"+href+"', '"+target+"');");
-			
-			// remove target preventing the 'javascript:' url being opened.. we will open in a new window if needed!
-			jQuery(domEle).attr('target', '');
+			jQuery(domEle).bind("click", function(event) {
+				// prevent actually following the link
+				event.preventDefault();
+				// handle the href of the link
+				n3s_follow_url(jQuery(this).attr('href'), jQuery(this).attr('target'));
+			});
 		}
 	});
 }

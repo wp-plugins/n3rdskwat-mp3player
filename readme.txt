@@ -4,7 +4,7 @@ Donate link: http://www.n3rdskwat.com/code/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable, music
 Requires at least: 2.6.0
 Tested up to: 2.9.2
-Stable tag: 1.1.14
+Stable tag: 1.1.15
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure in tact!
 
@@ -78,6 +78,9 @@ The WP Ajax Edit Comments plugin uses a strange way on the document.ready functi
 
 == Changelog ==
 
+= 1.1.15 =
+* Changed the way we handle links to a more transparent form. This way mp3-links will still contain the possibility to download the file by right-clicking.
+
 = 1.1.14 =
 * Fixed a bug with the playlist not showing
 * Added support for lower versions of PHP (json encoding)
@@ -122,6 +125,9 @@ The WP Ajax Edit Comments plugin uses a strange way on the document.ready functi
 * Changed the style for the mp3player to position: fixed which keeps it from shaking all over when scrolled
 
 == Upgrade Notice ==
+= 1.1.15 =
+Small cosmetic / functional update for the link-hack
+
 = 1.1.14 =
 Now supporting lower versions of PHP aswel. This fixes a bug when the player works but the playlist remains empty.
 
