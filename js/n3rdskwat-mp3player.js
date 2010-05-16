@@ -337,7 +337,9 @@ function n3s_post_form(form) {
 			n3s_replace_body(html);
 		},
 		error: function(req, status, thrown) {
-			n3s_show_error(req.responseText);
+			if(undefined == jQuery.validationEngine) {
+				n3s_show_error(req.responseText);
+			}
 		}
 	});
 }
@@ -404,12 +406,14 @@ function n3s_follow_url(url, target) {
 }
 
 function n3s_show_error(error) {
-	if(typeof error == 'string') {
+	if(typeof error == 'string' && error != "") {
 		error = error.substr(error.indexOf('<body'));
 		error = error.substr(error.indexOf('>')+1);
 		
 		jQuery('#n3s_error_text').html(error);
 		jQuery('#n3s_error').show();
+		jQuery('#n3s_error').css('position', 'fixed');
+		jQuery('#n3s_error').css('bottom', 50 + 'px');
 		
 		n3s_showing_error = true;
 	}
