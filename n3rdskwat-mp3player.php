@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.1.16
+Version: 1.1.17
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -122,6 +122,8 @@ var n3s_settings = new n3s_settings_object('".get_bloginfo('wpurl')."', '".$n3rd
 if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post or making a page:
 	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
+	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress.js"));
+//	wp_enqueue_script('swfaddress-optimizer', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress-optimizer.js"));
 	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.js"));
 }
 

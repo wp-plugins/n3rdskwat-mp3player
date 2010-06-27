@@ -26,16 +26,21 @@ function n3s_initialize_scripts() {
 var n3s_replaced_body = false;
 var n3s_showing_error = false;
 var n3s_has_scrolled = false;
+var n3s_following_url = false;
 
 var n3s_last_url;
 var n3s_current_url;
+
+function debug(text) {
+	document.body.innerHTML += text;
+}
 
 n3s_document_ready = function() {
 	if(n3s_replaced_body) return;
 	   n3s_replaced_body = true;
 	
 	n3s_current_url = window.location.toString();
-	
+		
 	var error_window_code = '<div id="n3s_error"><div id="n3s_error_text"></div><div id="n3s_error_button"><input type="button" value="close" onclick="n3s_close_error();" /></div></div>';
 	var playlist_code = (n3s_settings.playlist == '1')?'<div id="n3s_playlist"></div>':'';
 	var playerbar_code = '<div id="n3s_mp3player"></div>';
@@ -147,6 +152,8 @@ n3s_document_ready = function() {
 	// apply opacity to the player and playlist
 	jQuery('#n3s_mp3player').fadeTo(0, n3s_settings.opacity);
 	jQuery('#n3s_playlist').fadeTo(0, n3s_settings.opacity);
+	
+	jQuery('#n3s_playlist').hide();
 	
 	// change all links + forms to be ajax-controlled
 	n3s_replace_links();
@@ -309,6 +316,9 @@ function n3s_populate_playlist() {
 			} catch(e) {}
 			
 			jQuery('#n3s_playlist_button :input').attr('disabled', '');
+		},
+		error: function(req, status, thrown) {
+			alert(req.status + req.responseText);
 		}
 	});
 }
@@ -344,7 +354,7 @@ function n3s_post_form(form) {
 	});
 }
 
-function n3s_follow_url(url, target) {
+function n3s_follow_url(url, target, SkipSWFAddress) {
 	n3s_last_url = url;	
 	
 	if(url.indexOf('#') == 0) {
@@ -398,9 +408,15 @@ function n3s_follow_url(url, target) {
 		url: url,
 		cache: false, 
 		success: function(html) {
+			if(SWFAddress.getValue() != url.replace(n3s_settings.baseurl, '')) {
+				SWFAddress.setValue(url.replace(n3s_settings.baseurl, ''));
+			}
 			n3s_current_url = url;
 			n3s_replace_body(html);
 			n3s_last_url = '';
+		},
+		error: function(req, status, bla) {
+			alert(req + ' status: ' + status);
 		}
 	});
 }
@@ -536,6 +552,7 @@ function n3s_set_current_page() {
 }
 
 function n3s_get_current_page() {
+	return; 
 	var page = n3s_read_cookie('current_page');
 	
 	if(page && page != window.location.toString()) {
@@ -561,22 +578,28 @@ function n3s_read_cookie(name) {
 
 
 n3s_settings_object = function(blogurl, path, ap, rand, rep, pos, border, border_style, border_color, bg, opacity, pl, pl_text, pl_border, pl_hover, pl_active_text, pl_active_bg) {
-	this.baseurl = blogurl;
-	this.path = path;
-	this.autoplay = ap;
+	this.baseurl 	= blogurl;
+	this.path 		= path;
+	this.autoplay 	= ap;
 	this.randomize = rand;
 	this.repeatall = rep;
-	this.position = pos;
-	this.border = border;
-	this.border_color = border_color;
-	this.border_style = border_style;
+	this.position 	= pos;
+	this.border 	= border;
+	this.border_color 	= border_color;
+	this.border_style 	= border_style;
 	this.background = bg;
-	this.opacity = opacity;
-	this.playlist = pl;
-	this.playlist_text = pl_text;
+	this.opacity 	= opacity;
+	this.playlist 	= pl;
+	this.playlist_text 	= pl_text;
 	this.playlist_border = pl_border;
-	this.playlist_hover = pl_hover;
+	this.playlist_hover 	= pl_hover;
 	
 	this.playlist_active_text = pl_active_text;
 	this.playlist_active_background = pl_active_bg;
 }
+
+function handleChange(event) {
+	n3s_follow_url(n3s_settings.baseurl + event.value);
+}
+
+SWFAddress.addEventListener(SWFAddressEvent.CHANGE, handleChange);

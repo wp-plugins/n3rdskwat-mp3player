@@ -31,10 +31,8 @@ if(count($blog_parts) > 1) {
 $document_root = realpath($document_root);
 
 
-if (!function_exists('json_encode'))
-{
-	function json_encode($a=false)
-	{
+if (!function_exists('json_encode')) {
+	function json_encode($a=false) {
 		// Some basic debugging to ensure we have something returned
 		if(is_null($a)) return 'null';
 		if($a === false) return 'false';
@@ -148,8 +146,11 @@ foreach($mp3s as $value) {
 $mp3s = $tmp;
 
 
+header("HTTP/1.0 200 OK");
+
 if($_GET['type'] == 'json') {
-	die(json_encode($mp3s));
+	echo json_encode($mp3s);
+	exit(1);
 }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';
