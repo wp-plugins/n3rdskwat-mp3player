@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.1.17
+Version: 1.2.0
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -60,15 +60,10 @@ if($wp_version >= '2.6.0') {
 	$options_page = get_bloginfo('siteurl') . '/wp-admin/admin.php?page=n3rdskwat-mp3player/options.php';
 }
 
-
-
 /* Adds our admin options under "Options" */
-
-
 function n3rdskwat_flashmp3player_options_page() {
 	add_options_page('n3rdskwat - mp3player', 'n3rdskwat mp3player', 10, 'n3rdskwat-mp3player/options.php');
 }
-
 
 function n3rdskwat_mp3player_styles() {
 	/* What version of WP is running? */
@@ -110,7 +105,7 @@ function n3rdskwat_mp3player_styles() {
 <script type=\"text/javascript\">
 //<![CDATA[
 document.write('<link rel=\"stylesheet\" href=\"".$n3rdskwat_mp3player_style_path."n3rdskwat-mp3player.css\" type=\"text/css\" media=\"screen\" />');
-var n3s_settings = new n3s_settings_object('".get_bloginfo('wpurl')."', '".$n3rdskwat_mp3player_plugin_prefix."', ".(($autoplay=='1')?1:0).", ".(($randomize=='1')?1:0).", ".(($repeatall=='1')?1:0).", '$vertical_position $horizontal_position', '$border_width', '$border_style', '$border_color', '$background', $opacity, ".(($playlist=='1')?1:0).", '$playlist_text', '$playlist_border', '$playlist_hover', '$playlist_active_color', '$playlist_active_bg');
+n3rdskwat.mp3player.settings = {baseurl:'".get_bloginfo('wpurl')."', path:'".$n3rdskwat_mp3player_plugin_prefix."', autoplay:".(($autoplay=='1')?1:0).", randomize:".(($randomize=='1')?1:0).", repeatall:".(($repeatall=='1')?1:0).", position:'$vertical_position $horizontal_position', border:'$border_width', border_style:'$border_style', border_color:'$border_color', background:'$background', opacity:$opacity, playlist:".(($playlist=='1')?1:0).", playlist_text:'$playlist_text', playlist_border:'$playlist_border', playlist_hover:'$playlist_hover', playlist_active_text:'$playlist_active_color', playlist_active_background:'$playlist_active_bg'};
 //]]>
 </script>
 <!-- end n3rdskwat initialize scripts -->\n";
@@ -123,7 +118,6 @@ if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post
 	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
 	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress.js"));
-//	wp_enqueue_script('swfaddress-optimizer', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress-optimizer.js"));
 	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.js"));
 }
 

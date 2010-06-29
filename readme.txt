@@ -4,7 +4,7 @@ Donate link: http://www.n3rdskwat.com/code/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable, music
 Requires at least: 2.6.0
 Tested up to: 3.0.0
-Stable tag: 1.1.17
+Stable tag: 1.2.0
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure intact!
 
@@ -28,21 +28,21 @@ Features
 * Adds a simple mp3 player to your blog
 * Scans your whole website or specified directory for mp3's to put in the playlist
 * Automatically start playing on entering the blog
-* Randomize mp3 playback
+* Optional randomization of mp3 playback
 * Repeat-all after the entire playlist has been played
 * Displaying of the playlist
 * Where to search for mp3's
 * Easily customizable positioning and layout properties
-* Converts your blog to an AJAX controlled environment
-* Keeps the SEO (search engine optimization) structure in tact!
+* Converts your blog to an AJAX controlled environment with keeping the SEO (search engine optimization) structure in tact!
+* Uses SWFAddress to ensure you can link your pages to anybody correctly
 
 == Installation ==
 
-1. Download the plugin through the build-in plugin-search.
-2. Or download it manually and extract it in your plugins directory.
-3. Activate the plugin through the 'Plugins' menu in WordPress.
-4. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
-5. When other plugins fail to work properly please contact me at the plugin-website so I can build in a solution.
+1a. Download the plugin through the build-in plugin-search.
+1b. Or download it manually and extract it in your plugins directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
+4. When other plugins fail to work properly please contact us at the plugin-website so we can build in a solution!
 
 == Frequently Asked Questions ==
 
@@ -77,6 +77,10 @@ The WP Ajax Edit Comments plugin uses a strange way on the document.ready functi
 3. playlist disabled
 
 == Changelog ==
+
+= 1.2.0 =
+* Rebuild the javascript for the plugin to be more efficient and easier to read
+* Fixed some minor bugs concerning layout and functionality
 
 = 1.1.17 =
 * Added SWFAddress functionality
@@ -132,6 +136,7 @@ The WP Ajax Edit Comments plugin uses a strange way on the document.ready functi
 * Changed the style for the mp3player to position: fixed which keeps it from shaking all over when scrolled
 
 == Upgrade Notice ==
+
 = 1.1.17 =
 SWFAddress functionality added, this adds link-ability for external sources
 
