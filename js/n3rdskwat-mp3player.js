@@ -34,6 +34,27 @@ if(typeof n3rdskwat.mp3player === "undefined") {
 	var current_url = window.location.toString();
 	
 	function mp3player() {
+		
+		
+		
+		
+		this.initialize_scripts = function() {
+			/*
+			 * TODO:
+			 *   Find a better way to re-initialize {window.onload} or {document.onload} dependend scripts..
+			 *
+			 * Alternative:
+			 *   Add checks like lightbox to this function...
+			 */
+			if(typeof initLightbox == 'function') initLightbox();
+			
+			// NextGen Gallery support:
+			if(typeof shutterOnload == 'function') shutterOnload();
+		}
+		
+		
+		
+		
 		this.initialize = function() {
 			if(initialized == TRUE) return;
 				initialized = TRUE;
@@ -84,20 +105,6 @@ if(typeof n3rdskwat.mp3player === "undefined") {
 			this.replace_forms();
 			
 			SWFAddress.addEventListener(SWFAddressEvent.CHANGE, this.handleChange);
-		}
-		
-		this.initialize_scripts = function() {
-			/*
-			 * TODO:
-			 *   Find a better way to re-initialize {window.onload} or {document.onload} dependend scripts..
-			 *
-			 * Alternative:
-			 *   Add checks like lightbox to this function...
-			 */
-			if(typeof initLightbox == 'function') initLightbox();
-			
-			// NextGen Gallery support:
-			if(typeof shutterOnload == 'function') shutterOnload();
 		}
 		
 		this.build_ui = function() {
@@ -155,10 +162,10 @@ if(typeof n3rdskwat.mp3player === "undefined") {
 			
 			// apply positioning of the flash
 			flash.css('position', 'relative');
-			if(settings.position.indexOf('left') != -1) {
+			if(settings.position.indexOf('left') > -1) {
 				flash.css('float', 'left');
 				flash.css('margin-left', '5px');
-			} else if(settings.position.indexOf('center') != -1) {
+			} else if(settings.position.indexOf('center') > -1) {
 				flash.css('position', 'absolute');
 				flash.css('left', '50%');
 				flash.css('margin-left', ((settings.playlist == '1')?'-190':'-150') + 'px');
@@ -171,17 +178,18 @@ if(typeof n3rdskwat.mp3player === "undefined") {
 			// apply positioning of the playlist button (if enabled)
 			if(settings.playlist == 1) {
 				playlist_button.css('position', 'relative');
-				if(settings.position.indexOf('left') != -1) {
+				if(settings.position.indexOf('left') > -1) {
 					playlist.css('left', '5px');
 					playlist_button.css('float', 'left');
 					playlist_button.css('margin-left', '10px');
-				} else if(settings.position.indexOf('center') != 1) {
+				} else if(settings.position.indexOf('center') > 1) {
 					playlist.css('left', '50%');
 					playlist.css('margin-left', '-183px');
 					playlist_button.css('position', 'absolute');
 					playlist_button.css('left', '50%');
 					playlist_button.css('margin-left', '120px');
 				} else {
+					
 					playlist.css('right', '5px');
 					playlist_button.css('float', 'right');
 					playlist_button.css('margin-right', '10px');
@@ -545,12 +553,12 @@ if(typeof n3rdskwat.mp3player === "undefined") {
 			document.cookie = 'swf_value=; expires='+date.toGMTString() + '; path=/';
 			
 			if(swf_value == null || swf_value == "#" || swf_value == "null") {
-				return false;
+				return FALSE;
 			} else {
 				SWFAddress.setValue(swf_value);
 			}
 			
-			return true;
+			return TRUE;
 		}
 		
 		this.create_cookie = function(name, value, days) {
