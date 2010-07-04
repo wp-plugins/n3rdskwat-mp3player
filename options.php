@@ -24,20 +24,18 @@ function validate_color($input, $default) {
 	$hex = preg_match('/^#([0-9A-Fa-f]){6}$/', $input);
 	$named = preg_match('/^[a-zA-Z]*$/', $input);
 	
-	if(!$hex && !$named) {
-		return $default;
-	}	
-	return $input;
+	return ($hex || $named) ? $input : $default;
 }
 
 function validate_style($input, $default = 'solid') {
 	global $border_styles;
-	
-	if(in_array($input, $border_styles)) {
-		return $input;
-	}
-	
-	return $default;
+	return (in_array($input, $border_styles)) ? $input : $default;
+}
+
+$transitions = array('none', 'flash');
+function validate_transition($input, $default = 'none') {
+	global $transitions;
+	return (in_array($input, $transitions)) ? $input : $default;
 }
 
 function dir_listing(&$dirlist, $dir, $root) {
@@ -87,6 +85,7 @@ if ('process' == $_POST['stage']) {
 	update_option('n3rdskwat_playlist_border_width', intval($_POST['playlist_width']));
 	update_option('n3rdskwat_playlist_hover', validate_color($_POST['playlist_hover'], 'black'));
 	
+	update_option('n3rdskwat_transition', validate_transition($_POST['transition']));
 	
 	update_option('n3rdskwat_playlist_active_color', validate_color($_POST['playlist_active_color'], 'white'));
 	update_option('n3rdskwat_playlist_active_background', validate_color($_POST['playlist_active_background'], 'black'));
@@ -123,6 +122,7 @@ $playlist_hover = get_option('n3rdskwat_playlist_hover');
 $background = get_option('n3rdskwat_background');
 
 $opacity = get_option('n3rdskwat_opacity');
+$transition = get_option('n3rdskwat_transition');
 
 $path = get_option('n3rdskwat_mp3path');
 $recursive = get_option('n3rdskwat_search_recusive');
@@ -179,7 +179,7 @@ dir_listing($dirlist, $blog_root, $blog_root);
 					<option value="/"<?php echo (($path == "/")?" SELECTED":"") ?>><?php _e('Entire blog', 'n3rdskwat_mp3player') ?></option>
 <?php
 foreach($dirlist as $dirname) {
-	$selected = ($path == $dirname)?" SELECTED":"";
+	$selected = ($path == $dirname)?" selected='selected'":"";
 	echo "<option value=\"".$dirname."\"".$selected.">".$dirname."</option>\n";
 }
 ?>
@@ -192,6 +192,24 @@ foreach($dirlist as $dirname) {
 			<tr valign="baseline">
 				<td width="10"><input type="checkbox" name="recursive" value="1" id="recursive"<?php echo ($recursive)?" checked":"" ?> /></td>
 				<td><label for="recursive"><?php _e('Recursive searching for mp3\'s', 'n3rdskwat_mp3player') ?></label></td>
+			</tr>
+			</table>
+			
+			<h3><?php _e('Page transitions', 'n3rdskwat_player') ?></h3>
+			<table width="100%" cellspacing="0" cellpadding="0">
+			<tr valign="baseline">
+				<td width="33%"><?php _e('Transitionstyle', 'n3rdskwat_mp3player') ?></td>
+				<td>
+					<select name="transition" style="width: 200px;">
+					
+<?php
+foreach($transitions as $transition_option) {
+	$selected = ($transition == $transition_option)?" selected='selected'":"";
+	echo "<option value=\"".$transition_option."\"".$selected.">".$transition_option."</option>\n";
+}
+?>
+					</select>	
+				</td>
 			</tr>
 			</table>
 

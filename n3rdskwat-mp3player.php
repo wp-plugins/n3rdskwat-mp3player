@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.2.1
+Version: 1.2.2
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -71,26 +71,28 @@ function n3rdskwat_mp3player_styles() {
 	global $n3rdskwat_mp3player_plugin_prefix;
 	
 	/*Get options for form fields*/
-	$autoplay = get_option('n3rdskwat_autoplay');
-	$randomize = get_option('n3rdskwat_randomize');
-	$repeatall = get_option('n3rdskwat_repeatall');
+	$autoplay 					= get_option('n3rdskwat_autoplay');
+	$randomize 					= get_option('n3rdskwat_randomize');
+	$repeatall 					= get_option('n3rdskwat_repeatall');
 	
-	$horizontal_position = get_option('n3rdskwat_horizontal_position');
-	$vertical_position = get_option('n3rdskwat_vertical_position');
+	$transition 				= get_option('n3rdskwat_transition');
 	
-	$border_width = get_option("n3rdskwat_border_width");
-	$border_style = get_option("n3rdskwat_border_style", "solid");
-	$border_color = get_option("n3rdskwat_border_color", "black");
+	$horizontal_position 	= get_option('n3rdskwat_horizontal_position');
+	$vertical_position 		= get_option('n3rdskwat_vertical_position');
+	
+	$border_width 				= get_option("n3rdskwat_border_width");
+	$border_style 				= get_option("n3rdskwat_border_style", "solid");
+	$border_color 				= get_option("n3rdskwat_border_color", "black");
 
-	$background = get_option("n3rdskwat_background");
+	$background 				= get_option("n3rdskwat_background");
 	
-	$playlist = get_option("n3rdskwat_playlist");
-	$playlist_text = get_option("n3rdskwat_playlist_text");
-	$playlist_hover = get_option("n3rdskwat_playlist_hover");
-	$playlist_border = get_option("n3rdskwat_playlist_border_width");
+	$playlist 					= get_option("n3rdskwat_playlist");
+	$playlist_text 			= get_option("n3rdskwat_playlist_text");
+	$playlist_hover 			= get_option("n3rdskwat_playlist_hover");
+	$playlist_border 			= get_option("n3rdskwat_playlist_border_width");
 	
-	$playlist_active_color = get_option("n3rdskwat_playlist_active_color");
-	$playlist_active_bg = get_option("n3rdskwat_playlist_active_background");
+	$playlist_active_color	= get_option("n3rdskwat_playlist_active_color");
+	$playlist_active_bg 		= get_option("n3rdskwat_playlist_active_background");
 	
 	$opacity = (1/100)*intval(get_option("n3rdskwat_opacity"));
 	
@@ -105,7 +107,26 @@ function n3rdskwat_mp3player_styles() {
 <script type=\"text/javascript\">
 //<![CDATA[
 document.write('<link rel=\"stylesheet\" href=\"".$n3rdskwat_mp3player_style_path."n3rdskwat-mp3player.css\" type=\"text/css\" media=\"screen\" />');
-n3rdskwat.mp3player.settings = {baseurl:'".get_bloginfo('wpurl')."', path:'".$n3rdskwat_mp3player_plugin_prefix."', autoplay:".(($autoplay=='1')?1:0).", randomize:".(($randomize=='1')?1:0).", repeatall:".(($repeatall=='1')?1:0).", position:'$vertical_position $horizontal_position', border:'$border_width', border_style:'$border_style', border_color:'$border_color', background:'$background', opacity:$opacity, playlist:".(($playlist=='1')?1:0).", playlist_text:'$playlist_text', playlist_border:'$playlist_border', playlist_hover:'$playlist_hover', playlist_active_text:'$playlist_active_color', playlist_active_background:'$playlist_active_bg'};
+n3rdskwat.mp3player.settings = {
+	baseurl:'".get_bloginfo('wpurl')."',
+	path:'".$n3rdskwat_mp3player_plugin_prefix."',
+	autoplay:".(($autoplay=='1')?1:0).",
+	randomize:".(($randomize=='1')?1:0).",
+	repeatall:".(($repeatall=='1')?1:0).",
+	position:'$vertical_position $horizontal_position',
+	border:'$border_width',
+	border_style:'$border_style',
+	border_color:'$border_color',
+	background:'$background',
+	opacity:$opacity,
+	transition:'$transition',
+	playlist:".(($playlist=='1')?1:0).",
+	playlist_text:'$playlist_text',
+	playlist_border:'$playlist_border',
+	playlist_hover:'$playlist_hover',
+	playlist_active_text:'$playlist_active_color',
+	playlist_active_background:'$playlist_active_bg'
+};
 //]]>
 </script>
 <!-- end n3rdskwat initialize scripts -->\n";
