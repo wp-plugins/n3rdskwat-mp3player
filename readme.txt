@@ -4,7 +4,7 @@ Donate link: http://www.n3rdskwat.com/code/
 Tags: mp3, flash, ajax, playlist, adjustable, customizable, music
 Requires at least: 2.6.0
 Tested up to: 3.0.0
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 
 Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on while browsing the blog and keeping your SEO structure intact!
 
@@ -12,11 +12,10 @@ Places a mp3 player at the bottom of the screen. Ajax-izes the whole site so the
 
 The n3dskwat-mp3player is an idea of n3rdskwat member L.Gero.
 Combining our interests in music, video and art n3rdskwat creates.
-What we create depends on the situation..
 This time I created the mp3player that fitted our needs and *might* fit yours!
 
 The n3rdskwat-mp3player is a very simple player, which allows the visitor to listen to mp3's while browsing the website.
-Though most mp3 players stop playback when you follow a link, this one re-codes the blog to load internally. This means you never really leave the homepage, although you have access to the entire blog!
+Most mp3players stop playback when you follow a link, this one re-codes the blog to load internally. This means you never really leave the homepage, but you still have access to the entire blog!
 
 Important Links:
 
@@ -35,11 +34,13 @@ Features
 * Easily customizable positioning and layout properties
 * Converts your blog to an AJAX controlled environment with keeping the SEO (search engine optimization) structure in tact!
 * Uses SWFAddress to ensure you can link your pages to anybody correctly
+* In the process of adding localized translations!
+
+If you are a translator please send a translated version to [jmf@n3rdskwat.com](mailto:jmf@n3rdskwat.com) or drop a comment on [our blog](http://www.n3rdskwat.com/)!
 
 == Installation ==
 
-1a. Download the plugin through the build-in plugin-search.
-1b. Or download it manually and extract it in your plugins directory.
+1. Download the plugin through the build-in plugin-search or download it manually and extract it in your plugins directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. If you have other plugins, be sure to test thoroughly after loading a new page on your blog, see the F.A.Q. for more information.
 4. When other plugins fail to work properly please contact us at the plugin-website so we can build in a solution!
@@ -77,6 +78,10 @@ The WP Ajax Edit Comments plugin uses a strange way on the document.ready functi
 3. playlist disabled
 
 == Changelog ==
+
+= 1.2.3 =
+* Added Dutch language support
+* Added POT file for translators to create localized versions
 
 = 1.2.2 =
 * Fixed a bug in the Flash Player with the position-bar not updating correctly

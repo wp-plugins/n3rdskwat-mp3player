@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.2.2
+Version: 1.2.3
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -135,6 +135,10 @@ n3rdskwat.mp3player.settings = {
 	echo($n3rdskwat_mp3player_script);
 }
 
+function n3rdskwat_load_translations() {
+	load_plugin_textdomain('n3rdskwat_mp3player', false, 'n3rdskwat-mp3player/lang/');
+}
+
 if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post or making a page:
 	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
@@ -142,7 +146,10 @@ if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post
 	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.js"));
 }
 
+/* load the language files at initialization */
+add_action('init', 'n3rdskwat_load_translations');
 /* we want to add the above xhtml to the header of our pages: */
 add_action('wp_head', 'n3rdskwat_mp3player_styles');
 add_action('admin_menu', 'n3rdskwat_flashmp3player_options_page');
+
 ?>
