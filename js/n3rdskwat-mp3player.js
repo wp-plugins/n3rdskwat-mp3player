@@ -374,7 +374,7 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				data: inputs.serialize(),
 				dataType: 'html',
 				success: function(html) {
-					this.replace_body(html);
+					n3rdskwat.mp3player.replace_body(html);
 				},
 				error: function(req, status, thrown) {
 					if(undefined == $.validationEngine) {
