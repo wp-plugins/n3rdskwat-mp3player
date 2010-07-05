@@ -8,12 +8,13 @@ if(typeof(n3rdskwat) === "undefined") {
 (function(jQuery) {
 
 if(typeof(n3rdskwat.mp3player) === "undefined") {
-	var TRUE = true;
-	var FALSE = false;
-	var $ = jQuery;
+	var TRUE 	= true;
+	var FALSE 	= false;
+	var $ 		= jQuery;
 	
-	var initialized = FALSE;
-	var first_load = TRUE;
+	var initialized 	= FALSE;
+	var first_load 	= TRUE;
+	
 	var settings = {};
 	
 	var div_error;
@@ -23,23 +24,49 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 	var div_playlist_button;
 	var object_flash;
 	
-	var playlist_shown = FALSE;
+	var playlist_shown 			= FALSE;
 	var playlist_playing_index = 0;
-	var currently_playing = '';
+	var currently_playing 		= '';
 	
 	var path;
-	var id3_holder = new Array();
-	var playlist_data = new Array();
-	var playlist_populated = 0;
+	var id3_holder 			= new Array();
+	var playlist_data 		= new Array();
+	var playlist_populated 	= 0;
 	
-	var last_url;
-	var current_url = window.location.toString();
+	var last_url 		= '';
+	var current_url 	= window.location.toString();
 	
 	n3rdskwat.mp3player = {
 		
-		
+		loadScript: function( src ) {
+			try {
+				var fileref = document.createElement('script');
+					 fileref.setAttribute("type","text/javascript");
+					 fileref.setAttribute("src", src);
+			} catch(e) {}
+		},
 		
 		initialize_scripts: function() {
+			/*
+			 * Extra javascript execution to try to be compatible with more plugins
+			 */
+			
+			if(typeof(this.scripts) !== "undefined") {
+				// load javascript links
+				for(var index in this.scripts) {
+					this.loadScript(this.scripts[index]);
+				}
+			}
+			
+			if(typeof(this.js_codeblocks) !== "undefined") {
+				// load javascript code
+				for(var index in this.js_codeblocks) {
+					try {
+						eval(this.js_codeblocks[index]);
+					} catch(e) {}
+				}
+			}
+			
 			/*
 			 * TODO:
 			 *   Find a better way to re-initialize {window.onload} or {document.onload} dependend scripts..
@@ -47,10 +74,13 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			 * Alternative:
 			 *   Add checks like lightbox to this function...
 			 */
-			if(typeof initLightbox == 'function') initLightbox();
+			if(typeof(initLightbox) == 'function') initLightbox();
+			
 			
 			// NextGen Gallery support:
-			if(typeof shutterOnload == 'function') shutterOnload();
+			if(typeof(shutterOnload) == 'function') shutterOnload();
+			
+			if(typeof(sfHover) == 'function') sfHover();
 		},
 		
 		
@@ -202,28 +232,65 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 		replace_body: function(html) {
 			// html type will be other then 'string' when loading XML or images
 			if(typeof html == 'string') {
-				html = html.substr(html.indexOf('<body'));
-				var body_tags = html.substr(0, html.indexOf('>'));
-				html = html.substr(html.indexOf('>')+1);
 				
-				$(document.body).removeClass();
-				
-				var find_class = /class=['"](.*?)['"]/;
-				body_class = find_class.exec(body_tags);
-				
-				if(body_class) {
-					if(body_class[1] != '') {
-						$(document.body).addClass(body_class[1]);
+				/* find all the <script *** src="<file>"></script> tags */
+				if(typeof(this.scripts) === 'undefined') {
+					this.scripts = new Array();
+					
+					var find_js_scripts = /<script\s(.*?)src=['"](.*?)['"](.*?)><\/script>/i;
+					while(find_js_scripts.test(html)) {
+						js_scripts = find_js_scripts.exec(html);
+					
+						if( js_scripts[0].indexOf('n3rdskwat') == -1 ) {
+							this.scripts.push(js_scripts[2]);
+						}
+						
+						html = html.replace(find_js_scripts, '');
 					}
 				}
 				
-				html = html.replace('</body>', '');
-				html = html.replace('</html>', '');
+				if(typeof(this.js_codeblocks) === "undefined") {
+					this.js_codeblocks = new Array();
+					
+					var find_js_code = /<script(\s*)(.*?)>((.|\r|\n)*?)<\/script>/i;
+					while(find_js_code.test(html)) {
+						js_code = find_js_code.exec(html);
+						
+						if( js_code[0].indexOf('n3rdskwat') == -1 ) {
+							code = js_code[0];
+							
+							if(code != '') {
+								this.js_codeblocks.push(code);
+							}
+						}
+						
+						html = html.replace(find_js_code, '');
+					}
+				}
+				
+				var exclude_body = /<body(.*?)>((.|\r|\n)*)<\/body>/i;
+				var body = exclude_body.exec(html);
+					 body = body[0];
+				
+				var get_class = /class=['"](.*?)['"]/i;
+				var body_class = get_class.exec(body);
+					 body_class = (body_class.length > 0) ? body_class[1] : '';
+				
+				// update body class
+				$(document.body).removeClass();
+				
+				if(body_class != '') {
+					$(document.body).addClass(body_class);
+				}
+				
+				// remove body tags
+				body = body.replace(/<body(.*?)>/i, '');
+				body = body.replace(/<\/body>/i, '');
 				
 				if(document.getElementById) {
-					document.getElementById('n3s_body').innerHTML = html;
+					document.getElementById('n3s_body').innerHTML = body;
 				} else {
-					$('#n3s_body').html(html);
+					$('#n3s_body').html(body);
 				}
 				
 				if(!first_load) {
@@ -236,8 +303,8 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				
 				try {
 					// if we have a position, scroll to it
-					if(current_url.indexOf('#/') == -1 && current_url.indexOf('#') > -1) {
-						var a_name = current_url.substr(current_url.indexOf('#')+1);
+					if(current_url.indexOf('#') > -1) {
+						var a_name = current_url.substr(current_url.lastIndexOf('#')+1);
 						$(window).scrollTo(jQuery('#'+a_name));
 					} else {
 						$(window).scrollTo(0, 0);

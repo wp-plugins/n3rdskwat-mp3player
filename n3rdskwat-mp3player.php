@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.2.4
+Version: 1.2.5
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -23,6 +23,8 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+$version = "1.2.4";
 
 add_option("n3rdskwat_autoplay", "0");
 add_option("n3rdskwat_randomize", "0");
@@ -151,5 +153,8 @@ add_action('init', 'n3rdskwat_load_translations');
 /* we want to add the above xhtml to the header of our pages: */
 add_action('wp_head', 'n3rdskwat_mp3player_styles');
 add_action('admin_menu', 'n3rdskwat_flashmp3player_options_page');
+
+// Add a version number to the header (code-idea from nextgen-gallery)
+add_action('wp_head', create_function('', 'echo "\n<meta name=\"n3rdskwat-mp3player\" content=\"' . $version . '\" />\n";') );
 
 ?>
