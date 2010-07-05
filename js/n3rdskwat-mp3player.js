@@ -272,9 +272,13 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				var body = exclude_body.exec(html);
 					 body = body[0];
 				
-				var get_class = /class=['"](.*?)['"]/i;
+				body_class = '';
+				
+				var get_class = /<body(.*?)\sclass=['"](.*?)['"]/i;
+				if(get_class.test(body)) {
 				var body_class = get_class.exec(body);
 					 body_class = (body_class.length > 0) ? body_class[1] : '';
+				}
 				
 				// update body class
 				$(document.body).removeClass();
