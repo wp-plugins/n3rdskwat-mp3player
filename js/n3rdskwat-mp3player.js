@@ -92,11 +92,9 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			
 			settings = n3rdskwat.mp3player.settings;
 			
-			if(settings.baseurl.substr(-1) != "/") {
-				settings.baseurl = settings.baseurl + '/';
-			}
+			var baseurl = (settings.baseurl.substr(-1) != "/") ? settings.baseurl : settings.baseurl + '/';
 			
-			if(current_url != settings.baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) {
+			if(current_url != baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) {
 				// make cookie for 
 				var redirect = current_url.replace(settings.baseurl, '');
 				this.create_cookie('swf_value', escape(redirect));
