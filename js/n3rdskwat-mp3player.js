@@ -91,17 +91,13 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				initialized = TRUE;
 			 
 			settings = n3rdskwat.mp3player.settings;
-			 
-			 
-			 
+		 
 			var baseurl = (settings.baseurl.substr(-1) != "/") ? settings.baseurl + '/' : settings.baseurl;
 			if(current_url != baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) { 
 				// make cookie for 
 				var redirect = current_url.replace(baseurl, '');
 				this.create_cookie('swf_value', escape(redirect));
-				alert(baseurl);
-				 
-				// window.location = baseurl;
+				window.location = baseurl;
 				return;
 			} 
 			 
@@ -426,8 +422,9 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				url: url, 
 				cache: false, 
 				success: function(html) { 
-					if(SWFAddress.getValue() != url.replace(settings.baseurl, '')) { 
-						SWFAddress.setValue(url.replace(settings.baseurl, ''));
+					var baseurl = (settings.baseurl.substr(-1) == "/") ? settings.baseurl : settings.baseurl + '/';
+					if(SWFAddress.getValue() != url.replace(baseurl, '')) { 
+						SWFAddress.setValue(url.replace(baseurl, ''));
 					} 
 					current_url = url;
 					n3rdskwat.mp3player.replace_body(html);
