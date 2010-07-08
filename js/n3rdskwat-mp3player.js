@@ -93,10 +93,9 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			settings = n3rdskwat.mp3player.settings;
 			
 			var baseurl = (settings.baseurl.substr(-1) != "/") ? settings.baseurl : settings.baseurl + '/';
-			
 			if(current_url != baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) {
 				// make cookie for 
-				var redirect = current_url.replace(settings.baseurl, '');
+				var redirect = current_url.replace(baseurl, '');
 				this.create_cookie('swf_value', escape(redirect));
 				window.location = settings.baseurl;
 				return;
