@@ -1,0 +1,162 @@
+# Translation of the WordPress plugin n3rdskwat-mp3player 1.2.2 by n3rdskwat-jmf.
+# Copyright (C) 2010 n3rdskwat-jmf
+# This file is distributed under the same license as the n3rdskwat-mp3player package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: n3rdskwat-mp3player 1.2.2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/n3rdskwat-mp3player\n"
+"POT-Creation-Date: 2010-07-04 11:55+0000\n"
+"PO-Revision-Date: 2010-07-04 14:49+0100\n"
+"Last-Translator: Jip Moors <j.moors@home.nl>\n"
+"Language-Team: n3rdskwat <jmf@n3rdskwat.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: options.php:140
+msgid "n3rdskwat - mp3player options"
+msgstr "n3rdskwat - mp3player instellingen"
+
+#: options.php:145
+msgid "If you want to add mp3's to the playlist, just upload them anywhere on your site, the mp3 script searches for all mp3's inside your website."
+msgstr "Om mp3's aan de speellijst toe te voegen upload je deze ergens op je site. Het script doorzoekt het volledige blog en maakt een lijst van alle gevonden mp3's."
+
+#: options.php:153
+msgid "Player settings"
+msgstr "Speler instellingen"
+
+#: options.php:157
+msgid "Autoplay mp3's"
+msgstr "Automatisch afspelen"
+
+#: options.php:161
+msgid "Randomize mp3's"
+msgstr "Willekeurig afspelen"
+
+#: options.php:165
+msgid "Repeat all"
+msgstr "Alles herhalen"
+
+#: options.php:169
+msgid "Show playlist"
+msgstr "Toon speellijst"
+
+#: options.php:173
+msgid "Mp3 collection"
+msgstr "Mp3verzameling"
+
+#: options.php:176
+msgid "Path to search for mp3's"
+msgstr "Pad om naar mp3's te zoeken"
+
+#: options.php:179
+msgid "Entire blog"
+msgstr "Volledige blog"
+
+#: options.php:194
+msgid "Recursive searching for mp3's"
+msgstr "Zoek recursief naar mp3's"
+
+#: options.php:198
+msgid "Page transitions"
+msgstr "Pagina overgangen"
+
+#: options.php:201
+msgid "Transitionstyle"
+msgstr "Overgangsstijl"
+
+#: options.php:219
+msgid "Layout settings"
+msgstr "Uiterlijke instellingen"
+
+#: options.php:222
+msgid "Position on screen"
+msgstr "Plaatsing op het scherm"
+
+#: options.php:225
+msgid "top"
+msgstr "boven"
+
+#: options.php:226
+msgid "bottom"
+msgstr "onder"
+
+#: options.php:229
+msgid "left"
+msgstr "links"
+
+#: options.php:230
+msgid "center"
+msgstr "gecentreerd"
+
+#: options.php:231
+msgid "right"
+msgstr "rechts"
+
+#: options.php:236
+msgid "Background color"
+msgstr "Achtergrondkleur"
+
+#: options.php:242
+msgid "Opacity"
+msgstr "Ondoorzichtigheid"
+
+#: options.php:248
+msgid "Border style"
+msgstr "Randstijl"
+
+#: options.php:263
+msgid "Playerbar"
+msgstr "Spelerbalk"
+
+#: options.php:266
+#: options.php:276
+msgid "Border size"
+msgstr "Randdikte"
+
+#: options.php:273
+msgid "Playlist"
+msgstr "Speellijst"
+
+#: options.php:282
+msgid "Text color"
+msgstr "Tekstkleur"
+
+#: options.php:288
+msgid "Hover color"
+msgstr "Zweefkleur"
+
+#: options.php:294
+msgid "Active song text"
+msgstr "Tekstkleur van het actieve nummer"
+
+#: options.php:300
+msgid "Active song background"
+msgstr "Achtergrondkleur van het actieve nummer"
+
+#: options.php:313
+msgid "Save Changes"
+msgstr "Wijzigingen opslaan"
+
+#. Plugin Name of the plugin/theme
+msgid "n3rdskwat-mp3player"
+msgstr "n3rdskwat-mp3player"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.n3rdskwat.com/code/"
+msgstr "http://www.n3rdskwat.com/code/"
+
+#. Description of the plugin/theme
+msgid "Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure."
+msgstr "Plaatst een mp3speler op het scherm. Ajax-iseerd de hele website zodat de muziek doorspeelt zonder de SEO-structuur kapot te maken."
+
+#. Author of the plugin/theme
+msgid "n3rdskwat-jmf"
+msgstr "n3rdskwat-jmf"
+
+#. Author URI of the plugin/theme
+msgid "http://www.n3rdskwat.com/"
+msgstr "http://www.n3rdskwat.com/"
+
