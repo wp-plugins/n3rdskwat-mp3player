@@ -96,12 +96,17 @@ function n3rdskwat_mp3player_styles() {
 	$playlist_active_color	= get_option("n3rdskwat_playlist_active_color");
 	$playlist_active_bg 		= get_option("n3rdskwat_playlist_active_background");
 	
+	$excludeURIs				= get_option('n3rdskwat_exclude_uris');
+	
 	$opacity = (1/100)*intval(get_option("n3rdskwat_opacity"));
 	
     /* The next line figures out where the javascripts and images and CSS are installed,
     relative to your wordpress server's root: */
 	 
     $n3rdskwat_mp3player_style_path = ($n3rdskwat_mp3player_plugin_prefix."css/");
+	 
+	 $excludeURIs = explode(',', $excludeURIs);
+	 $excludeURIs = json_encode($excludeURIs);
 
     /* The xhtml header code needed for lightbox to work: */
 	$n3rdskwat_mp3player_script = "
@@ -112,6 +117,7 @@ document.write('<link rel=\"stylesheet\" href=\"".$n3rdskwat_mp3player_style_pat
 n3rdskwat.mp3player.settings = {
 	baseurl:'".get_bloginfo('wpurl')."',
 	path:'".$n3rdskwat_mp3player_plugin_prefix."',
+	exclude:".$excludeURIs.",
 	autoplay:".(($autoplay=='1')?1:0).",
 	randomize:".(($randomize=='1')?1:0).",
 	repeatall:".(($repeatall=='1')?1:0).",
@@ -146,7 +152,7 @@ if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post
 	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
 	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress.js"));
-	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.min.js"));
+	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.js"));
 }
 
 /* load the language files at initialization */

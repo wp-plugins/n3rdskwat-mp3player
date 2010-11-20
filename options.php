@@ -38,6 +38,29 @@ function validate_transition($input, $default = 'none') {
 	return (in_array($input, $transitions)) ? $input : $default;
 }
 
+function prepare_uris($exclude) {
+	if( empty($exclude) ) return '';
+	
+	$exclude = strip_tags($exclude);
+	if( strpos($exclude, ',') !== false ) {
+		$items = explode(',', $exclude);
+	} else {
+		$items = array($exclude);
+	}
+	
+	$baseURI = get_bloginfo('wpurl');
+	$baseURI .= '/';
+	$baseURI = str_replace('//', '/', $baseURI);
+	
+	foreach( $items as &$item ) {
+		$item = str_replace($baseURI, '/', $item);
+		$item = ( substr($item, 0, 1) != '/' ) ? '/' . $item : $item;
+	}
+	
+	$output = implode(',', $items);
+	return $output;
+}
+
 function dir_listing(&$dirlist, $dir, $root) {
 	//global $dirlist;
 	
@@ -73,6 +96,8 @@ if ('process' == $_POST['stage']) {
 	update_option('n3rdskwat_repeatall', ($_POST['repeatall'] == "1")?1:0);
 	
 	update_option('n3rdskwat_playlist', ($_POST['playlist'] == "1")?1:0);
+	
+	update_option('n3rdskwat_exclude_uris', prepare_uris($_POST['exclude']));
 	
 	update_option('n3rdskwat_vertical_position', $_POST['vertical_position']);
 	update_option('n3rdskwat_horizontal_position', $_POST['horizontal_position']);
@@ -130,6 +155,8 @@ $recursive = get_option('n3rdskwat_search_recusive');
 $playlist_active_color = get_option('n3rdskwat_playlist_active_color');
 $playlist_active_background = get_option('n3rdskwat_playlist_active_background');
 
+$exclude = get_option('n3rdskwat_exclude_uris');
+
 
 $blog_root = get_blogpath();
 dir_listing($dirlist, $blog_root, $blog_root);
@@ -150,7 +177,8 @@ dir_listing($dirlist, $blog_root, $blog_root);
 	<tr>
 		<td width="50%" valign="top">
 			
-			<h3><?php _e('Player settings', 'n3rdskwat_mp3player') ?></h3>
+         <fieldset style="border: 1px outset black; padding: 5px; margin-bottom: 10px;">
+         <legend style="font-size: 110%; font-weight: bold;">&nbsp;<?php _e('Player settings', 'n3rdskwat_mp3player') ?>&nbsp;</legend>
 			<table width="100%">
 			<tr valign="baseline">
 				<td width="10"><input type="checkbox" name="autoplay" value="1" id="autoplay"<?php echo ($autoplay)?" checked":"" ?> /></td>
@@ -169,8 +197,10 @@ dir_listing($dirlist, $blog_root, $blog_root);
 				<td><label for="playlist"><?php _e('Show playlist', 'n3rdskwat_mp3player') ?></label></td>
 			</tr>
 			</table>
-			
-			<h3><?php _e('Mp3 collection', 'n3rdskwat_player') ?></h3>
+			</fieldset>
+         
+         <fieldset style="border: 1px outset black; padding: 5px; margin-bottom: 10px;">
+         <legend style="font-size: 110%; font-weight: bold;">&nbsp;<?php _e('Mp3 collection', 'n3rdskwat_player') ?>&nbsp;</legend>
 			<table width="100%" cellspacing="0" cellpadding="0">
 			<tr valign="baseline">
 				<td width="33%"><?php _e('Path to search for mp3\'s', 'n3rdskwat_mp3player') ?></td>
@@ -194,8 +224,10 @@ foreach($dirlist as $dirname) {
 				<td><label for="recursive"><?php _e('Recursive searching for mp3\'s', 'n3rdskwat_mp3player') ?></label></td>
 			</tr>
 			</table>
+         </fieldset>
 			
-			<h3><?php _e('Page transitions', 'n3rdskwat_player') ?></h3>
+         <fieldset style="border: 1px outset black; padding: 5px; margin-bottom: 10px;">
+         <legend style="font-size: 110%; font-weight: bold;">&nbsp;<?php _e('Page transitions', 'n3rdskwat_player') ?>&nbsp;</legend>
 			<table width="100%" cellspacing="0" cellpadding="0">
 			<tr valign="baseline">
 				<td width="33%"><?php _e('Transitionstyle', 'n3rdskwat_mp3player') ?></td>
@@ -212,11 +244,23 @@ foreach($transitions as $transition_option) {
 				</td>
 			</tr>
 			</table>
+         </fieldset>
+         
+         <fieldset style="border: 1px outset black; padding: 5px; margin-bottom: 10px;">
+         <legend style="font-size: 110%; font-weight: bold;">&nbsp;<?php _e('Excluded URIs', 'n3rdskwat_player') ?>&nbsp;</legend>
+			<table width="100%" cellspacing="0" cellpadding="0">
+			<tr valign="baseline">
+				<td width="33%" valign="top"><?php _e('Enter the URIs (seperated by commas) of pages where the player should be paused on entry', 'n3rdskwat_mp3player') ?></td>
+				<td><textarea name="exclude" style="width: 200px; height: 100px;" cols="30" rows="10"><?php echo $exclude ?></textarea></td>
+			</tr>
+			</table>
+         </fieldset>
 
 		</td>
 		<td width="50%" valign="top">
 			
-			<h3><?php _e('Layout settings', 'n3rdskwat_mp3player') ?></h3>
+         <fieldset style="border: 1px outset black; padding: 5px; margin-bottom: 10px;">
+         <legend style="font-size: 110%; font-weight: bold;">&nbsp;<?php _e('Layout settings', 'n3rdskwat_mp3player') ?>&nbsp;</legend>
 			<table width="100%" >
 			<tr valign="baseline">
 				<td width="130"><?php _e('Position on screen', 'n3rdskwat_mp3player') ?></td>
@@ -254,7 +298,6 @@ foreach($transitions as $transition_option) {
 					}
 					?>
 					</select>
-					
 					<input type="text" name="border_color" value="<?php echo $border_color ?>" maxlength="32" size="12" />
 				</td>
 			</tr>
@@ -302,8 +345,8 @@ foreach($transitions as $transition_option) {
 					<input type="text" name="playlist_active_background" value="<?php echo $playlist_active_background ?>" maxlength="32" size="12" />
 				</td>
 			</tr>
-			
 			</table>
+         </fieldset>
 		
 		</td>
 	</tr>
