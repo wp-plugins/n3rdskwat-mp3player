@@ -54,6 +54,7 @@ function prepare_uris($exclude) {
 	
 	foreach( $items as &$item ) {
 		$item = str_replace($baseURI, '/', $item);
+		$item = str_replace('/#/', '/', $item);
 		$item = ( substr($item, 0, 1) != '/' ) ? '/' . $item : $item;
 	}
 	
