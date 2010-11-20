@@ -129,6 +129,7 @@ n3rdskwat.mp3player.settings = {
 	playlist_active_text:'$playlist_active_color',
 	playlist_active_background:'$playlist_active_bg'
 };
+n3rdskwat.mp3player.redirect();
 //]]>
 </script>
 <!-- end n3rdskwat initialize scripts -->\n";
@@ -145,7 +146,7 @@ if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post
 	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
 	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress.js"));
-	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.js"));
+	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.min.js"));
 }
 
 /* load the language files at initialization */
