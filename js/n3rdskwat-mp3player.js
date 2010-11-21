@@ -344,13 +344,14 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				
 				var image = /(.*?)(.gif|.jpeg|.jpg|.png)(.*?)/.test(href);
 				var javascript = /^javascript:(.*?)/.test(href);
+				var pageAnchor = (href.substr(0,1) == '#');
 				
 				var onclick = $(domEle).attr('onclick');
 				var onmousedown = $(domEle).attr('onmousedown');
 				var onmouseup = $(domEle).attr('onmouseup');
 				
 				// only replace tags if it doesn't contain any javascript
-				if(href != "" && !image && !javascript && !onclick && !onmousedown && !onmouseup) {
+				if(href != "" && !image && !javascript && !pageAnchor && !onclick && !onmousedown && !onmouseup) {
 					$(domEle).bind("click", function(event) {
 						// prevent actually following the link
 						event.preventDefault();
