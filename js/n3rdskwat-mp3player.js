@@ -142,7 +142,7 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			div_body 	 = '<div id="n3s_body"></div>';
 			div_playlist_button = (settings.playlist == '1') ? '<div id="n3s_playlist_button"><input type="button" value="playlist" onclick="n3rdskwat.mp3player.toggle_playlist();" /></div>' : '';
 			
-			object_flash = '<OBJECT type="application/x-shockwave-flash" data="'+settings.path+'/swf/n3rdskwat-mp3player.swf" WIDTH="300" HEIGHT="35" id="n3s_flash"><PARAM NAME=movie VALUE="'+settings.path+'/swf/n3rdskwat-mp3player.swf"><PARAM NAME=quality VALUE=high><PARAM NAME=wmode VALUE="transparent"><param name="FlashVars" value="randomize='+settings.randomize+'&autoplay='+settings.autoplay+'&repeatall='+settings.repeatall+'&plugin_path='+settings.path+'" /></OBJECT>';
+			object_flash = '<object type="application/x-shockwave-flash" data="'+settings.path+'/swf/n3rdskwat-mp3player.swf" width="300" height="35" id="n3s_flash"><param name=movie value="'+settings.path+'/swf/n3rdskwat-mp3player.swf"><param name=quality VALUE=high><param name=wmode value="transparent"><param name="FlashVars" value="randomize='+settings.randomize+'&autoplay='+settings.autoplay+'&repeatall='+settings.repeatall+'&plugin_path='+settings.path+'" /></object>';
 		},
 		
 		apply_formatting: function() {
