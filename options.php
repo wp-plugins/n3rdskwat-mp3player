@@ -52,10 +52,11 @@ function prepare_uris($exclude) {
 	$baseURI .= '/';
 	$baseURI = str_replace('//', '/', $baseURI);
 	
-	foreach( $items as &$item ) {
+	foreach( $items as $index => $item ) {
 		$item = str_replace($baseURI, '/', $item);
 		$item = str_replace('/#/', '/', $item);
 		$item = ( substr($item, 0, 1) != '/' ) ? '/' . $item : $item;
+		$items[$index] = $item;
 	}
 	
 	$output = implode(',', $items);
@@ -84,7 +85,7 @@ function dir_listing(&$dirlist, $dir, $root) {
 				array_push($dirlist, str_replace($root, "", $dir."/".$file));
 				
 				// check for sub-directories
-				dir_listing(&$dirlist, $dir."/".$file, $root);
+				dir_listing($dirlist, $dir."/".$file, $root);
 			}
 		}
 	}	
