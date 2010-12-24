@@ -5,14 +5,13 @@ if(typeof(n3rdskwat) === "undefined") {
 }
 
 
-(function(jQuery) { 
+(function($) { 
 
 if(typeof(n3rdskwat.mp3player) === "undefined") { 
 	var TRUE	= true;
-	var FALSE	= false;
-	var $			= jQuery;
+	var FALSE = false;
 	
-	var initialized	= FALSE;
+	var initialized = FALSE;
 	var first_load	= TRUE;
 	
 	var settings = {};
@@ -24,17 +23,17 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 	var div_playlist_button;
 	var object_flash;
 	
-	var playlist_shown	= FALSE;
+	var playlist_shown = FALSE;
 	var playlist_playing_index = 0;
-	var currently_playing	= '';
+	var currently_playing = '';
 	
 	var path;
 	var id3_holder = new Array();
 	var playlist_data = new Array();
 	var playlist_populated = 0;
 	 
-	var last_url		= '';
-	var current_url	= window.location.toString();
+	var last_url = '';
+	var current_url = window.location.toString();
 	 
 	n3rdskwat.mp3player = {
 		
@@ -43,6 +42,7 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				var fileref = document.createElement('script');
 					 fileref.setAttribute("type","text/javascript");
 					 fileref.setAttribute("src", src);
+					 document.body.appendChild(fileref);
 			} catch(e) {}
 		},
 		
@@ -83,23 +83,24 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			if(typeof(sfHover) == 'function') sfHover();
 		},
 		
-		
-		
+		redirect: function() {
+			settings = n3rdskwat_mp3player_settings;
+			var baseurl = (settings.baseurl.substr(-1) != "/") ? settings.baseurl + '/' : settings.baseurl;
+			if(current_url != baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) {
+				// make cookie for
+				var redirect = current_url.replace(baseurl, '');
+				window.location = baseurl + '#/' + redirect;
+				return;
+			}
+		},
 		
 		initialize: function() {
 			if(initialized == TRUE) return;
 				initialized = TRUE;
 			
-			settings = n3rdskwat.mp3player.settings;
-		 	
-			var baseurl = (settings.baseurl.substr(-1) != "/") ? settings.baseurl + '/' : settings.baseurl;
-			if(current_url != baseurl && current_url.indexOf('#/') == -1 && current_url.indexOf('#') < current_url.length-1) {
-				// make cookie for
-				var redirect = current_url.replace(baseurl, '');
-				this.create_cookie('swf_value', escape(redirect));
-				window.location = baseurl;
-				return;
-			}
+			settings = n3rdskwat_mp3player_settings;
+			
+			//alert(document.body.onload);
 			
 			this.build_ui();
 			
@@ -110,11 +111,8 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			$(document.body).html(div_error + div_playlist + div_bar + div_body);
 			
 			var swflocation = SWFAddress.getValue();
-			// if we aren't redirecting, insert the Body Contents again
-			if(!this.swfaddress_redirect()) {
-				if(swflocation == "/" || swflocation == "") {
-					$('#n3s_body').html(html);
-				}
+			if(swflocation == "/" || swflocation == "") {
+				$('#n3s_body').html(html);
 			}
 			
 			// because of the float:right, the flash and button need to be flipped
@@ -140,13 +138,13 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 		
 		build_ui: function() {
 			// objects to be added to the page
-			div_error 	 = '<div id="n3s_error"><div id="n3s_error_text"></div><div id="n3s_error_button"><input type="button" value="close" onclick="n3rdskwat.mp3player.close_error();" /></div></div>';
+			div_error    = '<div id="n3s_error"><div id="n3s_error_text"></div><div id="n3s_error_button"><input type="button" value="close" onclick="n3rdskwat.mp3player.close_error();" /></div></div>';
 			div_playlist = (settings.playlist == '1')?'<div id="n3s_playlist"></div>':'';
-			div_bar 		 = '<div id="n3s_mp3player"></div>';
-			div_body 	 = '<div id="n3s_body"></div>';
+			div_bar      = '<div id="n3s_mp3player"></div>';
+			div_body     = '<div id="n3s_body"></div>';
 			div_playlist_button = (settings.playlist == '1') ? '<div id="n3s_playlist_button"><input type="button" value="playlist" onclick="n3rdskwat.mp3player.toggle_playlist();" /></div>' : '';
 			
-			object_flash = '<OBJECT type="application/x-shockwave-flash" data="'+settings.path+'/swf/n3rdskwat-mp3player.swf" WIDTH="300" HEIGHT="35" id="n3s_flash"><PARAM NAME=movie VALUE="'+settings.path+'/swf/n3rdskwat-mp3player.swf"><PARAM NAME=quality VALUE=high><PARAM NAME=wmode VALUE="transparent"><param name="FlashVars" value="randomize='+settings.randomize+'&autoplay='+settings.autoplay+'&repeatall='+settings.repeatall+'&plugin_path='+settings.path+'" /></OBJECT>';
+			object_flash = '<object type="application/x-shockwave-flash" data="'+settings.path+'/swf/n3rdskwat-mp3player.swf" width="300" height="35" id="n3s_flash"><param name=movie value="'+settings.path+'/swf/n3rdskwat-mp3player.swf"><param name=quality VALUE=high><param name=wmode value="transparent"><param name="FlashVars" value="randomize='+settings.randomize+'&autoplay='+settings.autoplay+'&repeatall='+settings.repeatall+'&plugin_path='+settings.path+'" /></object>';
 		},
 		
 		apply_formatting: function() {
@@ -231,9 +229,9 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 		replace_body: function(html) {
 			// html type will be other then 'string' when loading XML or images
 			if(typeof html == 'string') {
-			
 				/* find all the <script *** src="<file>"></script> tags */
-				if(typeof(this.scripts) === 'undefined') {
+				// do this for every page:
+				//if(typeof(this.scripts) === 'undefined') {
 					this.scripts = new Array();
 					
 					var find_js_scripts = /<script\s(.*?)src=['"](.*?)['"](.*?)><\/script>/i;
@@ -246,30 +244,28 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 						
 						html = html.replace(find_js_scripts, '');
 					}
-				}
+				//}
 				
-				if(typeof(this.js_codeblocks) === "undefined") {
-					this.js_codeblocks = new Array();
+				this.js_codeblocks = new Array();
 					
-					var find_js_code = /<script(\s*)(.*?)>((.|\r|\n)*?)<\/script>/i;
-					while(find_js_code.test(html)) {
-						js_code = find_js_code.exec(html);
+				var find_js_code = /<script(\s*)(.*?)>((.|\r|\n)*?)<\/script>/i;
+				while(find_js_code.test(html)) {
+					js_code = find_js_code.exec(html);
 						
-						if( js_code[0].indexOf('n3rdskwat') == -1 ) {
-							code = js_code[0];
+					if( js_code[0].indexOf('n3rdskwat') == -1 ) {
+						code = js_code[0];
 							
-							if(code != '') {
-								this.js_codeblocks.push(code);
-							}
+						if(code != '') {
+							this.js_codeblocks.push(code);
 						}
-						
-						html = html.replace(find_js_code, '');
 					}
+						
+					html = html.replace(find_js_code, '');
 				}
 					
 				var exclude_body = /<body(.*?)>((.|\r|\n)*)<\/body>/i;
 				var body = exclude_body.exec(html);
-					 body = body[0];
+                body = body[0];
 				
 				// extract the body-class for this page
 				var body_class = '';
@@ -348,13 +344,14 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				
 				var image = /(.*?)(.gif|.jpeg|.jpg|.png)(.*?)/.test(href);
 				var javascript = /^javascript:(.*?)/.test(href);
+				var pageAnchor = (href.substr(0,1) == '#');
 				
 				var onclick = $(domEle).attr('onclick');
 				var onmousedown = $(domEle).attr('onmousedown');
 				var onmouseup = $(domEle).attr('onmouseup');
 				
 				// only replace tags if it doesn't contain any javascript
-				if(href != "" && !image && !javascript && !onclick && !onmousedown && !onmouseup) {
+				if(href != "" && !image && !javascript && !pageAnchor && !onclick && !onmousedown && !onmouseup) {
 					$(domEle).bind("click", function(event) {
 						// prevent actually following the link
 						event.preventDefault();
@@ -366,7 +363,9 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 		},
 		
 		replace_forms: function() {
-			$("form").unbind("submit");
+			/* dont strip functionality for other plugins? */
+			//$("form").unbind("submit");
+			
 			$("form").bind("submit", function(event) {
 				
 				action = $(this).attr('action');
@@ -385,11 +384,12 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			});
 		},
 		
-		follow_url: function(url, target, SkipSWFAddress) {
+		follow_url: function(url, target) {
 			last_url = url;
 			
 			if(current_url == url) return;
 			
+			// see where we are at and where we are trying to go to
 			var new_domain = url.replace('http://', '');
 			var cur_domain = current_url.replace('http://', '');
 			
@@ -422,23 +422,27 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 				return;
 			}
 			
+			// don't redirect / handle WP specific urls
 			if(url.indexOf('/wp-admin/') > -1 || url.indexOf('/wp-login.php') > -1) {
 				location.href = url;
 				return;
 			}
 			
+			// apply transitions
 			if(!first_load) {
 				if(settings.transition == 'flash') {
 					$('#n3s_body').fadeOut('fast');
 				}
 			}
 			
-			var baseurl = (settings.baseurl.substr(-1) == "/") ? settings.baseurl.substr(0, -1) : settings.baseurl;
-			if(!SkipSWFAddress && SWFAddress.getValue() != url.replace(baseurl, '')) {
+			// apply SWFAddress functionality
+			var baseurl = (settings.baseurl.substr(-1, 1) == "/") ? settings.baseurl.substr(0, -1) : settings.baseurl;
+			if(SWFAddress.getValue() != url.replace(baseurl, '')) {
 				SWFAddress.setValue(url.replace(baseurl, ''));
 				return;
 			}
 			
+			// make the request!
 			$.ajax({
 				url: url,
 				cache: false,
@@ -447,6 +451,15 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 					current_url = url;
 					last_url = '';
 				},
+				error: function(xhr, error) {
+					if(xhr.status == 404) {
+						url_parts = current_url.split('/');
+						url_parts.pop();
+						new_url = url_parts.join('/');
+
+						n3rdskwat.mp3player.follow_url(new_url, target);
+					}
+				}
 			});
 		},
 		
@@ -455,10 +468,20 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			var method = $(form).attr('method').toUpperCase();
 			var inputs = $(form).find(':input');
 			
+			if(method == 'GET') {
+				if(action.indexOf('?') == -1) {
+					action += '?' + inputs.serialize();
+				} else {
+					action += '&' + inputs.serialize();
+				}
+			} else {
+				postData = inputs.serialize();
+			}
+			
 			$.ajax({
 				url: action,
 				type: method,
-				data: inputs.serialize(),
+				data: postData,
 				dataType: 'html',
 				success: function(html) {
 					n3rdskwat.mp3player.replace_body(html);
@@ -643,47 +666,7 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 			
 			$('#n3s_error').hide();
 		},
-					 
-		swfaddress_redirect: function() {
-			var swf_value = unescape(this.read_cookie('swf_value'));
-			
-			/* Clear the cookie.. so it won't be loaded again */
-			var date = new Date();
-			date.setTime(date.getTime()+(-1*24*60*60*1000));
-			document.cookie = 'swf_value=;expires='+date.toGMTString() + ';path=/';
-			
-			/* Check if we need to redirect */
-			if(swf_value == null || swf_value == "null" || swf_value == "#" || swf_value == "#/") {
-				return FALSE;
-			}
-			
-			SWFAddress.setValue(swf_value);
-			return TRUE;
-		},
-		
-		create_cookie: function(name, value, days) {
-			if (days) {
-				var date = new Date();
-				date.setTime(date.getTime()+(days*24*60*60*1000));
-				var expires = ";expires="+date.toGMTString();
-			}
-			else var expires = "";
-			document.cookie = name+"="+value+expires+";path=/";
-		},
-			 
-		read_cookie: function(name) {
-			var nameEQ = name + "=";
-			var ca = document.cookie.split(';');
-			for(var i=0;i < ca.length;i++) {
-				var c = ca[i];
-				while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-				if (c.indexOf(nameEQ) == 0) {
-					return c.substring(nameEQ.length, c.length);
-				}
-			}
-			return null;
-		},
-		
+				
 		get_flash_movie: function(movie_name) {
 			return (navigator.appName.indexOf("Microsoft") != -1) ? window[movie_name] : document[movie_name];
 		}
@@ -692,6 +675,6 @@ if(typeof(n3rdskwat.mp3player) === "undefined") {
 })(jQuery);
 
  
-jQuery(document).ready(function() {
+jQuery(document.body).ready(function() {
 	n3rdskwat.mp3player.initialize();
 });

@@ -3,7 +3,7 @@
 Plugin Name: n3rdskwat-mp3player
 Plugin URI: http://www.n3rdskwat.com/code/
 Description: Places an mp3 player at the bottom of the screen. Ajax-izes the whole site so the music will go on without destroying your SEO structure.
-Version: 1.2.20
+Version: 1.3.0
 Author: n3rdskwat-jmf
 Author URI: http://www.n3rdskwat.com/
 License: GPL2
@@ -24,7 +24,7 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$version = "1.2.20";
+$version = "1.3.0";
 
 add_option("n3rdskwat_autoplay", "0");
 add_option("n3rdskwat_randomize", "0");
@@ -103,8 +103,6 @@ function n3rdskwat_mp3player_styles() {
     /* The next line figures out where the javascripts and images and CSS are installed,
     relative to your wordpress server's root: */
 	 
-    $n3rdskwat_mp3player_style_path = ($n3rdskwat_mp3player_plugin_prefix."css/");
-	 
 	 $excludeURIs = explode(',', $excludeURIs);
 	 $excludeURIs = json_encode($excludeURIs);
 
@@ -113,8 +111,7 @@ function n3rdskwat_mp3player_styles() {
 <!-- begin n3rdskwat initialize scripts -->
 <script type=\"text/javascript\">
 //<![CDATA[
-document.write('<link rel=\"stylesheet\" href=\"".$n3rdskwat_mp3player_style_path."n3rdskwat-mp3player.css\" type=\"text/css\" media=\"screen\" />');
-n3rdskwat.mp3player.settings = {
+n3rdskwat_mp3player_settings = {
 	baseurl:'".get_bloginfo('wpurl')."',
 	path:'".$n3rdskwat_mp3player_plugin_prefix."',
 	exclude:".$excludeURIs.",
@@ -135,7 +132,6 @@ n3rdskwat.mp3player.settings = {
 	playlist_active_text:'$playlist_active_color',
 	playlist_active_background:'$playlist_active_bg'
 };
-n3rdskwat.mp3player.redirect();
 //]]>
 </script>
 <!-- end n3rdskwat initialize scripts -->\n";
@@ -148,10 +144,14 @@ function n3rdskwat_load_translations() {
 	load_plugin_textdomain('n3rdskwat_mp3player', false, 'n3rdskwat-mp3player/lang/');
 }
 
+$n3rdskwat_mp3player_style_path = ($n3rdskwat_mp3player_plugin_prefix."css/");
+
 if (!is_admin()) { // if we are *not* viewing an admin page, like writing a post or making a page:
-	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.js"));
+	wp_enqueue_style('n3rdskwat-mp3player', ($n3rdskwat_mp3player_style_path."n3rdskwat-mp3player.css"));
+	
+	wp_enqueue_script('jquery', ($n3rdskwat_mp3player_plugin_prefix."js/jquery-1.4.4.min.js"));
 	wp_enqueue_script('jquery-scrollTo', ($n3rdskwat_mp3player_plugin_prefix."js/jquery.scrollTo.js"));
-	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress.js"));
+	wp_enqueue_script('swfaddress', ($n3rdskwat_mp3player_plugin_prefix."js/swfaddress-2.4.min.js"));
 	wp_enqueue_script('n3rdskwat-mp3player', ($n3rdskwat_mp3player_plugin_prefix."js/n3rdskwat-mp3player.min.js"));
 }
 
